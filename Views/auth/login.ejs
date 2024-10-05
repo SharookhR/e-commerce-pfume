@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <link rel="stylesheet" href="assets/css/userlogin.css">
+</head>
+<body>
+  <h1 id="logo">PFume</h3>
+  <div class="login-container">
+      <h1>Account Login</h1>
+      <p>If you are already a member you can login with your email address and password.</p>
+      <form id="loginForm" method="post" action="/">
+        <div class="input-group">
+          <label for="username">Username</label>
+          <input type="text" id="username" name="email" required>
+        </div>
+        <div class="input-group">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" required>
+        </div>
+        <button type="submit">Login</button>
+      </form>
+      <p>Don't have an account ?<a href="/register">Sign up here</a></p>
+    </div>
+</body>
+</html>
