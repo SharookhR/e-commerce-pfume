@@ -1,22 +1,11 @@
 const express = require('express')
-const session = require('express-session')
-const authController = require('../Controller/authController')
+const router = express.Router()
+const {verifyToken} = require('../middleware/verifyotp_token')
+const {renderLogin, renderSignUp, renderAdminLogin, renderOtpPage, signup, getOtp, verifyOtp, userLogin}= require('../Controller/authController')
 
-const auth_route= express()
-auth_route.use(session({
-    secret:"monkey",
-    resave:false,
-    saveUninitialized:true
-}))
-auth_route.set("view engine",'ejs')
-auth_route.set("views", "./Views/auth")
-auth_route.use(express.static('public'))
-auth_route.get('/login',authController.renderLogin)
-auth_route.get('/signup', authController.renderSignUp)
-auth_route.get('/adminlogin', authController.renderAdminLogin)
-auth_route.get('/otp', authController.renderOtp)
-auth_route.get('/home',(req, res)=>{
-    res.render('home')
-})
+router.route('/login').get(renderLogin).post(userLogin)
+router.route('/signup').get(renderSignUp).post(signup)
+router.route('/signup/otp').get(verifyToken,renderOtpPage).post(verifyToken, getOtp)
+router.route('/signup/otp/verify').post(verifyToken,verifyOtp)
 
-module.exports=auth_route;
+module.exports=router;

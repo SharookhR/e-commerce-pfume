@@ -1,40 +1,241 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
-    <link rel="stylesheet" href="assets/css/userlogin.css">
+    <title>PFUME - Account Login</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f5f5f5;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+        }
+
+        .page-wrapper {
+            display: flex;
+            align-items: flex-start;
+            max-width: 800px;
+            width: 100%;
+            position: relative;
+        }
+
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            position: absolute;
+            left: -100px;
+            top: 40px;
+        }
+
+        .container {
+            background-color: white;
+            padding: 40px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 400px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 10px;
+        }
+
+        p {
+            color: #666;
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            margin-bottom: 5px;
+            color: #666;
+        }
+
+        input[type='text'],
+        input[type="email"],
+        input[type="password"] {
+            width: 100%;
+            padding: 10px;
+            margin-bottom: 20px;
+            border: 1px solid #ddd;
+            border-radius: 4px;
+        }
+
+        .remember-forgot {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background-color: #000;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        .signup {
+            text-align: center;
+            margin-top: 20px;
+        }
+
+        a {
+            color: #000;
+            text-decoration: none;
+        }
+
+        @media (max-width: 800px) {
+            .page-wrapper {
+                flex-direction: column;
+                align-items: center;
+            }
+
+            .logo {
+                position: static;
+                margin-bottom: 20px;
+            }
+
+            .container {
+                max-width: 100%;
+            }
+        }
+    </style>
 </head>
+
 <body>
-  <h1 id="logo">PFume</h3>
-    <div class="login-container">
-        <h1>User Registration</h1>
-        
-        <form id="registrationForm" method="post" action="">
-          <div class="input-group">
-            <label for="username">Name</label>
-            <input type="text" id="username" name="name" required>
-          </div>
-          <div class="input-group">
-            <label for="email">Email</label>
-            <input type="email" id="email" name="email" required>
-          </div>
-          <div class="input-group">
-            <label for="mobile">Mobile No</label>
-            <input type="text" id="mob" name="mno" required>
-          </div>
-          <div class="input-group">
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required>
-          </div>
-          <div class="input-group">
-            <label for="confirmpassword">Confirm Password</label>
-            <input type="password" id="confirmpassword" name="confirmpassword" required>
-          </div>
-          <button  type="submit">Register</button>
-          <div id="formErrorMessages" style="color: red;"></div>
-        </form>
-      </div>
+    <div class="page-wrapper">
+        <div class="logo" aria-label="PFUME logo">🔒 PFUME</div>
+        <div class="container">
+            <h1>Account Login</h1>
+            <p>If you are already a member you can login with your email address and password.</p>
+            <form id="registrationForm" method="post">
+                <label for="name">Fullname</label>
+                <input type="text" id="name" name="name">
+                <label for="email">Email address</label>
+                <input type="email" id="email" name="email" placeholder="sampleuser@email.com" required>
+
+                <label for="phone">Phone</label>
+                <input type="text" id="phone" name="mno" required>
+
+
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required>
+
+
+                <label for="confirmpassword">Confirm Password</label>
+                <input type="password" id="confirmpassword" name="confirmpassword" required>
+
+                <div class="remember-forgot">
+                    <label>
+                        <input type="checkbox" name="remember" id="remember"> Remember me
+                    </label>
+                    <a href="#" aria-label="Forgot Password">Forgot Password ?</a>
+                </div>
+
+                <div id="formErrorMessages" style="color: red;"></div>
+                <button type="submit">Create Account</button>
+            </form>
+            <div class="signup">
+                Don't have an account ? <a href="#" aria-label="Sign up here">Sign up here</a>
+            </div>
+        </div>
+    </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+    const form = document.getElementById('registrationForm');
+    const errorMessagesDiv = document.getElementById('formErrorMessages');
+
+    form.addEventListener('submit', (event) => {
+        // Clear previous error messages
+        errorMessagesDiv.innerHTML = '';
+        let isValid = true;
+        let errorMessages = '';
+
+        // Get form field values
+        const name = document.getElementById('name').value.trim();
+        const email = document.getElementById('email').value.trim();
+        const password = document.getElementById('password').value.trim();
+        const confirmPassword = document.getElementById('confirmpassword').value.trim();
+        const phone = document.getElementById('phone').value.trim();
+
+        // Fullname validation (should not be empty and should have at least 3 characters)
+        if (name === '') {
+            errorMessages += '<p>Fullname is required.</p>';
+            isValid = false;
+        } else if (name.length < 3) {
+            errorMessages += '<p>Fullname must be at least 3 characters long.</p>';
+            isValid = false;
+        }
+
+        // Email validation
+        if (email === '') {
+            errorMessages += '<p>Email is required.</p>';
+            isValid = false;
+        } else if (!validateEmail(email)) {
+            errorMessages += '<p>Invalid email format.</p>';
+            isValid = false;
+        }
+
+        // Phone number validation (optional: can be customized to your needs)
+        if (phone === '') {
+            errorMessages += '<p>Phone number is required.</p>';
+            isValid = false;
+        } else if (!validatePhoneNumber(phone)) {
+            errorMessages += '<p>Phone number must be 10 digits.</p>';
+            isValid = false;
+        }
+
+        // Password validation
+        if (password === '') {
+            errorMessages += '<p>Password is required.</p>';
+            isValid = false;
+        } else if (password.length < 6) {
+            errorMessages += '<p>Password must be at least 6 characters long.</p>';
+            isValid = false;
+        }
+
+        // Confirm password validation
+        if (confirmPassword === '') {
+            errorMessages += '<p>Confirm Password is required.</p>';
+            isValid = false;
+        } else if (password !== confirmPassword) {
+            errorMessages += '<p>Passwords do not match.</p>';
+            isValid = false;
+        }
+
+        // Display all error messages
+        if (!isValid) {
+            errorMessagesDiv.innerHTML = errorMessages;
+            event.preventDefault();  // Prevent form submission if invalid
+        }
+    });
+
+    // Helper function to validate email format
+    function validateEmail(email) {
+        const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
+        return emailPattern.test(email);
+    }
+
+    // Helper function to validate phone number format (example for a 10-digit number)
+    function validatePhoneNumber(phone) {
+        const phonePattern = /^[0-9]{10}$/;
+        return phonePattern.test(phone);
+    }
+});
+
+    </script>
 </body>
+
 </html>

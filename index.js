@@ -1,9 +1,15 @@
+require("dotenv").config();
 const express = require('express');
 const connectDb = require('./config/db');
-const auth_route = require('./Routes/authRoute');
-require("dotenv").config();
+const cookieParser = require('cookie-parser')
 const app=express()
 
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+app.use(cookieParser())
+app.set("view engine",'ejs')
+app.set("views", "./Views/auth")
+app.use(express.static('public'))
 
 const authRoute =require('./Routes/authRoute')
 
