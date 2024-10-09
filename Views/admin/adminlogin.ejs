@@ -42,6 +42,10 @@
             font-size: 24px;
             margin-bottom: 10px;
         }
+        .error-message {
+            color: red;
+            margin-bottom: 20px;
+        }
         p {
             color: #666;
             margin-bottom: 20px;
@@ -101,27 +105,21 @@
     <div class="page-wrapper">
         <div class="logo" aria-label="PFUME logo">🔒 PFUME</div>
         <div class="container">
-            <h1>Account Login</h1>
-            <p>If you are already a member you can login with your email address and password.</p>
-            <form >
+            <h1>Admin Login</h1>
+            <% if (typeof errorMessage !== 'undefined') { %>
+              <div class="error-message"><%= errorMessage %></div>
+          <% } %>
+            <form method="post" >
                 <label for="email">Email address</label>
-                <input type="email" id="email" name="email" placeholder="sampleuser@email.com" required>
+                <input type="email" id="email" name="email" placeholder="Enter email " required>
                 
                 <label for="password">Password</label>
                 <input type="password" id="password" name="password" required>
                 
-                <div class="remember-forgot">
-                    <label>
-                        <input type="checkbox" name="remember" id="remember"> Remember me
-                    </label>
-                    <a href="#" aria-label="Forgot Password">Forgot Password ?</a>
-                </div>
+                
                 
                 <button type="submit">Login Account</button>
-            </form>
-            <div class="signup">
-                Don't have an account ? <a href="#" aria-label="Sign up here">Sign up here</a>
-            </div>
+            
         </div>
     </div>
 </body>

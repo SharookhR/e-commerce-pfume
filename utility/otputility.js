@@ -6,6 +6,8 @@ const tempData = require('../Model/tempUser')
 const generateOtp = () => {
     const otp = Math.floor(100000 + Math.random() * 900000);
     const otpExpiresAt = new Date(Date.now() + 2 * 60 * 1000)
+    console.log(otp);
+    
     return { otp, otpExpiresAt }
 }
 
@@ -16,8 +18,8 @@ const sendOtpEmail = async (email, otp) => {
             user: process.env.EMAIL,
             pass: process.env.EMAIL_PASS
         }, 
-        debug: true, // Enable debug mode for more information in the logs
-        logger: true
+        // debug: true, // Enable debug mode for more information in the logs
+        // logger: true
     
     })
 

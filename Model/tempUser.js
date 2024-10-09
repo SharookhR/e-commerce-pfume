@@ -36,6 +36,15 @@ const tempUserSchema = new mongoose.Schema({
         type: Date,
         default:Date.now,
         expires: 300
+    },
+    lastOtp:{
+        type:Date,
+        default:Date.now
+    },
+    otpType:{
+        type:String,
+        enum:['signup', 'forgotPassword'],
+        default:'signup'
     }
 
 })

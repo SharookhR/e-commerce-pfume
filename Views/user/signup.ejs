@@ -95,6 +95,10 @@
             color: #000;
             text-decoration: none;
         }
+        .error-message {
+            color: red;
+            margin-bottom: 20px;
+        }
 
         @media (max-width: 800px) {
             .page-wrapper {
@@ -118,8 +122,10 @@
     <div class="page-wrapper">
         <div class="logo" aria-label="PFUME logo">🔒 PFUME</div>
         <div class="container">
-            <h1>Account Login</h1>
-            <p>If you are already a member you can login with your email address and password.</p>
+            <h1>Account Signup</h1>
+            <% if(typeof errorMessage !=='undefined'){ %>
+                <div class="error-message"><%= errorMessage %></div>
+               <%} %>
             <form id="registrationForm" method="post">
                 <label for="name">Fullname</label>
                 <input type="text" id="name" name="name">
@@ -137,25 +143,20 @@
                 <label for="confirmpassword">Confirm Password</label>
                 <input type="password" id="confirmpassword" name="confirmpassword" required>
 
-                <div class="remember-forgot">
-                    <label>
-                        <input type="checkbox" name="remember" id="remember"> Remember me
-                    </label>
-                    <a href="#" aria-label="Forgot Password">Forgot Password ?</a>
-                </div>
+                
 
                 <div id="formErrorMessages" style="color: red;"></div>
                 <button type="submit">Create Account</button>
             </form>
             <div class="signup">
-                Don't have an account ? <a href="#" aria-label="Sign up here">Sign up here</a>
+                Already a member ? <a href="login" aria-label="Sign up here">Login</a>
             </div>
         </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('registrationForm');
-    const errorMessagesDiv = document.getElementById('formErrorMessages');
+    const errorMessagesDiv = document.getElementsByClassName('error-message');
 
     form.addEventListener('submit', (event) => {
         // Clear previous error messages

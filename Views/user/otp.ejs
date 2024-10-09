@@ -81,6 +81,13 @@
             color: #000;
             text-decoration: none;
         }
+        .error-message {
+            color: red;
+            margin-bottom: 20px;
+        }
+        #resendbtn {
+            margin-top: 20px;
+        }
         @media (max-width: 800px) {
             .page-wrapper {
                 flex-direction: column;
@@ -101,13 +108,19 @@
         <div class="logo" aria-label="PFUME logo">🔒 PFUME</div>
         <div class="container">
             <h1>Verify OTP</h1>
-            <p>If you are already a member you can login with your email address and password.</p>
+            <% if(typeof errorMessage !=='undefined'){ %>
+                <div class="error-message"><%= errorMessage %></div>
+               <%} %>
             <form method="post" action="/auth/signup/otp/verify">
                 <label for="email">Enter OTP</label>
                 <input type="text" id="otp" name="otp" >
       
                 
                 <button type="submit">Verify OTP</button>
+            </form>
+
+            <form  method="post" action="/auth/signup/otp/resend">
+                <button id="resendbtn" type="submit">Resend OTP</button>
             </form>
             
         </div>
