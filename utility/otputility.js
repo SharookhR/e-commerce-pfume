@@ -5,7 +5,7 @@ const tempData = require('../Model/tempUser')
 
 const generateOtp = () => {
     const otp = Math.floor(100000 + Math.random() * 900000);
-    const otpExpiresAt = new Date(Date.now() + 2 * 60 * 1000)
+    const otpExpiresAt = new Date(Date.now() + 5 * 60 * 1000)
     console.log(otp);
     
     return { otp, otpExpiresAt }

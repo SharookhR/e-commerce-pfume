@@ -1,22 +1,27 @@
-const jwt = require('jsonwebtoken')
-require('dotenv').config()
-const checkLogin = async(req, res, next)=>{
-    const token = req.cookies.accessToken
+const jwt = require("jsonwebtoken");
+require("dotenv").config();
+const preventUserLogin = async (req, res, next) => {
+  const token = req.cookies.accessToken;
+  if (token) {
     try {
-        if(token){
-        const decoded = await jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
-
-        if(decoded){
-           return res.redirect('/user/home')
-        }else{
-            next()
+      try {
+        const decoded = await jwt.verify(
+          token,
+          process.env.ACCESS_TOKEN_SECRET
+        );
+        if (decoded) {
+          return res.redirect("/user/home");
+        } else {
+          next();
         }
-    }
-     next()   
+      } catch (error) {
+        next();
+      }
     } catch (error) {
-        console.log(error);
-        
+      console.log(error);
     }
-}
-
-module.exports={checkLogin}
+  } else {
+    next();
+  }
+};
+module.exports = { preventUserLogin };

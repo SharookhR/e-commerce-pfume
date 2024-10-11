@@ -7,13 +7,13 @@ const generateToken = (userId,secret,expiresIn)=>{
 
 const generateAccessToken = (userId)=>{
     const accessTokenSecret = process.env.ACCESS_TOKEN_SECRET
-    const accessTokenExpires = '1m'
+    const accessTokenExpires = '10m'
     return generateToken(userId,accessTokenSecret,accessTokenExpires)
 }
 
 const generateRefreshToken = (userId)=>{
     const refreshTokenSecret = process.env.REFRESH_TOKEN_SECRET
-    const refreshTokenExpires= '2m'
+    const refreshTokenExpires= '30d'
     return generateToken(userId,refreshTokenSecret, refreshTokenExpires)
 }
 

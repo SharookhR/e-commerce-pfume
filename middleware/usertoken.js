@@ -8,9 +8,19 @@ const verifyRefreshToken = async (req, res, next)=>{
     try {
         if(accessToken){
             console.log("Access token found");
-            const decode = jwt.verify(accessToken,process.env.ACCESS_TOKEN_SECRET)
-            req.userId = decode.userId
-            return next()
+            try {
+                const decode = jwt.verify(accessToken,process.env.ACCESS_TOKEN_SECRET)
+                if(!decode){
+                    return res.redirect('/auth/login')
+                }
+                req.userId = decode.userId
+                return next()
+
+            } catch (error) {
+                return res.redirect('/auth/login')
+                console.log(error);
+                
+            }  
         }
         else{
             if(!refreshToken){
@@ -20,11 +30,8 @@ const verifyRefreshToken = async (req, res, next)=>{
             }
             else{
                 const decode = jwt.verify(refreshToken,process.env.REFRESH_TOKEN_SECRET)
-                console.log(req.userId);
                 req.userId = decode.userId
-                console.log(req.userId);
                 const userId = decode.userId
-                console.log(userId);
                 
                 if(decode){
 

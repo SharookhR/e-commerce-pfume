@@ -2,61 +2,45 @@ const User = require('../Model/UserModel')
 const tempUser = require('../Model/tempUser')
 const jwt = require('jsonwebtoken')
 const bcrypt = require('bcrypt')
-const {generateAccessToken, generateRefreshToken} = require('../utility/token')
+const { generateAccessToken, generateRefreshToken } = require('../utility/token')
 const { generateOtp, sendOtpEmail } = require('../utility/otputility')
 const resetUser = require("../Model/otpModel")
 
 const renderLogin = async (req, res) => {
-   try {
-       return res.render('login');
-   } catch (error) {
-    console.log(error);
-    
-   }
-    
+    try {
+        return res.render('login');
+    } catch (error) {
+        console.log(error);
+
+    }
+
 };
 
 
 
 
-const renderSignUp = async (req,res)=>{
-    
+const renderSignUp = async (req, res) => {
+
     try {
-       return res.render('signup')
-        } catch (error) {
+        return res.render('signup')
+    } catch (error) {
         console.log(error);
-        
+
     }
 }
 
-const renderAdminLogin = async(req, res)=>{
-    
- 
-    
+const renderAdminLogin = async (req, res) => {
+
+
+
     try {
-        const token = req.cookies.accessToken || req.headers['authorization'];
-    
-        
-        if (!token) {
-            return res.render('adminlogin'); 
-        }
-    
-        
-        const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET);
-    
-        if (decoded) {
-            return res.redirect('/admin/dashboard');
-        }
-        
-        
-        return res.render('adminlogin');
-        
+        res.render('adminlogin');
+
     } catch (error) {
-        
-        console.log('Error verifying token:', error.message);
-        return res.render('adminlogin'); 
+
+        console.log(error);
     }
-    
+
 }
 
 
@@ -79,13 +63,13 @@ const adminlogin = async (req, res) => {
         res.cookie('accessToken', accessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            maxAge: 1 * 60 * 1000
+            maxAge: 10 * 60 * 1000
         });
 
         res.cookie('refreshToken', refreshToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === 'production',
-            maxAge: 2 * 60 * 1000
+            maxAge: 30 * 24 * 60 * 60 * 1000
         });
 
         return res.redirect('/admin/dashboard');
@@ -96,40 +80,40 @@ const adminlogin = async (req, res) => {
 };
 
 
-const renderOtpPage = async(req, res)=>{
+const renderOtpPage = async (req, res) => {
 
-    
+
     try {
         const token = req.cookies.token;
-    
-    if(!token){
-       return res.redirect('/auth/signup')
-    }
+
+        if (!token) {
+            return res.redirect('/auth/signup')
+        }
         return res.render('otp')
     } catch (error) {
         console.error('Token verification failed:', error);
         return res.redirect('/auth/signup');
     }
-    
+
 }
 
-const signup = async (req, res)=>{
-    
-   
+const signup = async (req, res) => {
+
+
     try {
-        const {name, password, email, mno} = req.body
-        const existence = await User.findOne({email})
-        if(existence){
-           return res.render('signup', {errorMessage: "User already exist"})
+        const { name, password, email, mno } = req.body
+        const existence = await User.findOne({ email })
+        if (existence) {
+            return res.render('signup', { errorMessage: "User already exist" })
 
         }
-        
+
         const spass = await bcrypt.hash(password, 10)
         const user = new tempUser({
             name,
             email,
-            phone:mno,
-            password:spass
+            phone: mno,
+            password: spass
 
 
         })
@@ -143,11 +127,11 @@ const signup = async (req, res)=>{
         await sendOtpEmail(user.email, otp);
 
         const userId = user._id
-        const token = jwt.sign({userId}, process.env.JWT_OTP_TOKEN, {expiresIn:'15m'})
+        const token = jwt.sign({ userId }, process.env.JWT_OTP_TOKEN, { expiresIn: '15m' })
 
         res.cookie('token', token, {
-            httpOnly:false,
-            maxAge: 10 * 60 *1000
+            httpOnly: false,
+            maxAge: 10 * 60 * 1000
         })
         return res.redirect('/auth/signup/otp');
     } catch (error) {
@@ -157,36 +141,36 @@ const signup = async (req, res)=>{
 
 
 
-const verifyOtp = async(req, res)=>{
+const verifyOtp = async (req, res) => {
     try {
         const userId = req.userId
-        const {otp} = req.body
+        const { otp } = req.body
 
         const tempUserData = await tempUser.findById(userId)
 
-        if(!tempUserData.otp){
-           return res.render('otp', {errorMessage:"No OTP found"})
+        if (!tempUserData.otp) {
+            return res.render('otp', { errorMessage: "No OTP found" })
         }
 
-        if(otp===tempUserData.otp){
-            if(Date.now()>tempUserData.otpExpiresAt){
-               return res.render('otp', {errorMessage:"OTP expired"})
+        if (otp === tempUserData.otp) {
+            if (Date.now() > tempUserData.otpExpiresAt) {
+                return res.render('otp', { errorMessage: "OTP expired" })
 
             }
             const user = new User({
-                name:tempUserData.name,
-                email:tempUserData.email,
-                password:tempUserData.password,
-                phone:tempUserData.phone,
+                name: tempUserData.name,
+                email: tempUserData.email,
+                password: tempUserData.password,
+                phone: tempUserData.phone,
 
             })
 
             await user.save()
             return res.redirect('/auth/login')
-            
+
         }
-        else{
-            return res.render('otp', {errorMessage:"Invalid OTP"})
+        else {
+            return res.render('otp', { errorMessage: "Invalid OTP" })
 
         }
     } catch (error) {
@@ -194,200 +178,201 @@ const verifyOtp = async(req, res)=>{
     }
 }
 
-const userLogin = async(req, res)=>{
+const userLogin = async (req, res) => {
     try {
-        const {email, password} = req.body
+        const { email, password } = req.body
 
-        const user = await User.findOne({email})
-        if(!user || !(await user.comparePassword(password))){
-            return res.render('login', {errorMessage:"Invalid email or password"})
+        const user = await User.findOne({ email })
+        if (!user || !(await user.comparePassword(password))) {
+            return res.render('login', { errorMessage: "Invalid email or password" })
         }
+        
 
         const accessToken = generateAccessToken(user._id)
         const refreshToken = generateRefreshToken(user._id)
 
         res.cookie('accessToken', accessToken, {
-            httpOnly:true,
-            secure:process.env.NODE_ENV === 'production',
-            maxAge:1 * 60 * 1000
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 10 * 60 * 1000
         })
 
         res.cookie('refreshToken', refreshToken, {
-            httpOnly:true,
-            secure:process.env.NODE_ENV === 'production',
-            maxAge:2 * 60 * 1000
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 30 * 24 * 60 * 60 * 1000
         })
 
         return res.redirect('/user/home')
 
     } catch (error) {
         console.log(error);
-        
+
     }
 
 }
 
-const resendOtp = async(req, res)=>{
+const resendOtp = async (req, res) => {
     try {
         const userId = req.userId
         const user = await tempUser.findById(userId)
-        
-        
-        
+
+
+
         // if(!user){
         //    return res.render("otp", {errorMessage:"No user found"})
         // }
 
         const currentTime = Date.now();
-        const lastOtpTime= currentTime - user.lastOtp;
+        const lastOtpTime = currentTime - user.lastOtp;
 
-        if(lastOtpTime<60*1000) {
-            const timeLeft = Math.ceil((60 * 1000 - lastOtpTime) / 1000);  
+        if (lastOtpTime < 60 * 1000) {
+            const timeLeft = Math.ceil((60 * 1000 - lastOtpTime) / 1000);
             return res.render("otp", { errorMessage: `Please wait ${timeLeft} seconds before requesting a new OTP.` });
         }
 
-        const {otp, otpExpiresAt} = generateOtp();
+        const { otp, otpExpiresAt } = generateOtp();
         user.otp = otp;
         user.otpExpiresAt = otpExpiresAt
         user.lastOtp = currentTime
 
         await user.save();
-        
-        
+
+
         await sendOtpEmail(user.email, otp)
-        return res.render("otp", {errorMessage:"OTP has been resent" });
+        return res.render("otp", { errorMessage: "OTP has been resent" });
 
     } catch (error) {
         console.log(error);
-        
+
     }
 }
 
-const renderForgotPasssword = async(req, res)=>{
+const renderForgotPasssword = async (req, res) => {
     try {
         res.render('forgotPassword')
     } catch (error) {
         console.log(error);
-        
+
     }
 }
-const verifyUser= async (req, res)=>{
+const verifyUser = async (req, res) => {
     try {
-        const {email} = req.body
-        
-        const user = await User.findOne({email})
-        
-       if(user){
-        const {otp, otpExpiresAt} = generateOtp()
+        const { email } = req.body
 
-        const temp = new resetUser({
-            email,
-            otp,
-            otpExpiresAt
-        
-        })
+        const user = await User.findOne({ email })
 
-        await temp.save()
+        if (user) {
+            const { otp, otpExpiresAt } = generateOtp()
 
-        const userId = temp._id
-        
-        
-        const token = jwt.sign({userId}, process.env.JWT_OTP_TOKEN, {expiresIn:'15m'})
+            const temp = new resetUser({
+                email,
+                otp,
+                otpExpiresAt
 
-        res.cookie('token', token, {
-            httpOnly:false,
-            maxAge:10 * 60 * 1000
-        })
+            })
 
-        return res.redirect("/auth/login/forgotpassword/otp")
-    }else {
-        return res.render('forgotPassword', {errorMessage: "Invalid user"})
-    }
-        
-        
-        
+            await temp.save()
+
+            const userId = temp._id
+
+
+            const token = jwt.sign({ userId }, process.env.JWT_OTP_TOKEN, { expiresIn: '10m' })
+
+            res.cookie('token', token, {
+                httpOnly: false,
+                maxAge: 10 * 60 * 1000
+            })
+
+            return res.redirect("/auth/login/forgotpassword/otp")
+        } else {
+            return res.render('forgotPassword', { errorMessage: "Invalid user" })
+        }
+
+
+
     } catch (error) {
         console.log(error);
-        
+
     }
 }
 
-const renderForgotPasswordOtp = async(req, res)=>{
+const renderForgotPasswordOtp = async (req, res) => {
     try {
         return res.render("forgotPasswordOtp")
     } catch (error) {
         console.log(error);
-        
+
     }
 }
 
-const verifyForgotPassswordOtp = async(req, res)=>{
+const verifyForgotPassswordOtp = async (req, res) => {
     try {
-        
-        const {otp} = req.body
+
+        const { otp } = req.body
         const userId = req.userId
 
         const tempUser1 = await resetUser.findById(userId)
-      
-       
-        if(!tempUser1.otp){
-           return res.render('renderForgotPasswordOtp', {errorMessage:"No OTP found"})
+
+
+        if (!tempUser1.otp) {
+            return res.render('renderForgotPasswordOtp', { errorMessage: "No OTP found" })
         }
 
-        if(otp===tempUser1.otp){
-            if(Date.now()>tempUser1.otpExpiresAt){
-               return res.render('renderForgotPasswordOtp', {errorMessage:"OTP Expired"})
+        if (otp === tempUser1.otp) {
+            if (Date.now() > tempUser1.otpExpiresAt) {
+                return res.render('renderForgotPasswordOtp', { errorMessage: "OTP Expired" })
 
             }
-         
+
             return res.redirect('/auth/login/resetpassword')
-        
+
 
         }
-        else{
-            return res.render('forgotPasswordOtp', {errorMessage:"Invalid OTP "})
+        else {
+            return res.render('forgotPasswordOtp', { errorMessage: "Invalid OTP " })
 
         }
     } catch (error) {
         console.log(error);
-       
+
     }
 }
 
-const renderResetPassword = async (req, res)=>{
+const renderResetPassword = async (req, res) => {
     try {
         res.render('resetpassword')
     } catch (error) {
         console.log(error);
-        
+
     }
 }
 
-const resetPassword = async(req, res)=>{
+const resetPassword = async (req, res) => {
     try {
         const newpass = req.body.newpassword
-        const spass =await bcrypt.hash(newpass,10)
+        const spass = await bcrypt.hash(newpass, 10)
         const userId = req.userId
-        
-        
-        
-        const {email} = await resetUser.findById(userId)
 
-        
-        
-        const passupdate = await User.findOneAndUpdate({email}, {$set:{password:spass}})
+
+
+        const { email } = await resetUser.findById(userId)
+
+
+
+        const passupdate = await User.findOneAndUpdate({ email }, { $set: { password: spass } })
 
         await passupdate.save()
-        
+
         return res.send("pass updated")
-        
+
     } catch (error) {
         console.log(error);
-        
+
     }
 }
 
-const forgotPasswordResendOtp = async(req, res)=>{
+const forgotPasswordResendOtp = async (req, res) => {
     try {
         const userId = req.userId
         const user = await resetUser.findById(userId)
@@ -395,17 +380,17 @@ const forgotPasswordResendOtp = async(req, res)=>{
         // if(!user){
         //    return res.render("forgotPasswordOtp", {errorMessage:"No user found"})
         // }
-        
-        
-        const currentTime = Date.now();
-        const lastOtpTime= currentTime - user.lastOtp;
 
-        if(lastOtpTime<60*1000) {
-            const timeLeft = Math.ceil((60 * 1000 - lastOtpTime) / 1000);  
+
+        const currentTime = Date.now();
+        const lastOtpTime = currentTime - user.lastOtp;
+
+        if (lastOtpTime < 60 * 1000) {
+            const timeLeft = Math.ceil((60 * 1000 - lastOtpTime) / 1000);
             return res.render("forgotPasswordOtp", { errorMessage: `Please wait ${timeLeft} seconds before requesting a new OTP.` });
         }
 
-        const {otp, otpExpiresAt} = generateOtp();
+        const { otp, otpExpiresAt } = generateOtp();
         user.otp = otp;
         user.otpExpiresAt = otpExpiresAt
         user.lastOtp = currentTime
@@ -413,15 +398,15 @@ const forgotPasswordResendOtp = async(req, res)=>{
         await user.save();
 
         await sendOtpEmail(user.email, otp)
-        return res.render("forgotPasswordOtp", {errorMessage: "OTP has been resent" });
+        return res.render("forgotPasswordOtp", { errorMessage: "OTP has been resent" });
 
     } catch (error) {
         console.log(error);
-        
+
     }
 }
 
-module.exports={
+module.exports = {
     renderLogin,
     renderSignUp,
     renderAdminLogin,

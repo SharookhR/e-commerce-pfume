@@ -1,7 +1,12 @@
 const express = require('express')
 const userController = require('../Controller/userController')
-const {verifyRefreshToken} =  require('../middleware/user_token')
+
+const {errorPage} = require('../middleware/404')
 const router = express.Router()
-router.route('/home').get(verifyRefreshToken,userController.home)
+
+
+router.route('/home').get(userController.home)
+router.use(errorPage)
+
 
 module.exports=router

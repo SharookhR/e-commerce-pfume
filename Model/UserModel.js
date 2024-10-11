@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-const bcrypt = require('bcrypt')
+const bcrypt = require('bcrypt');
+const { type } = require('express/lib/response');
 const userSchema = new mongoose.Schema({
     name:{
         type:String,
@@ -20,6 +21,10 @@ const userSchema = new mongoose.Schema({
     isAdmin:{
         type:Number,
         default:0
+    },
+    isBlocked:{
+        type:Boolean,
+        default:false
     }
 
 })

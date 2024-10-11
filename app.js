@@ -8,17 +8,16 @@ const routes = require('./Routes/index')
 const app=express()
 
 
-app.use(cookieParser())
 
-app.use(express.json())
-app.use(express.urlencoded({extended: true}))
-// app.use('/assets',express.static(path.join(__dirname, 'public/user/')));
-app.use(express.static('public'))
+
 app.set("view engine",'ejs')
 app.set("views", ["./Views/user", "./Views/admin"])
-app.use(nocache())
+app.use(express.static(path.join(__dirname, 'public')))
 
-const authRoute =require('./Routes/authRoute')
+app.use(nocache())
+app.use(express.json())
+app.use(express.urlencoded({extended: true}))
+app.use(cookieParser())
 
 
 app.use('/',routes)

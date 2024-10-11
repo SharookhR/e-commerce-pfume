@@ -2,7 +2,7 @@
 <html lang="en">
 
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-brands.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:35 GMT -->
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-sellers-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:23 GMT -->
 <head>
     <meta charset="utf-8">
     <title>Evara Dashboard</title>
@@ -24,7 +24,7 @@
     <aside class="navbar-aside" id="offcanvas_aside">
         <div class="aside-top">
             <a href="index.html" class="brand-wrap">
-                <img src="/admin/assets/imgs/theme/logo.svg" class="logo" alt="Evara Dashboard">
+                <img src="/admin//assets/imgs/theme/logo.svg" class="logo" alt="Evara Dashboard">
             </a>
             <div>
                 <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
@@ -37,7 +37,7 @@
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
-                <li class="menu-item ">
+                <li class="menu-item active">
                     <a class="menu-link" href="users"> <i class="icon material-icons md-shopping_cart"></i>
                         <span class="text">Users</span>
                     </a>
@@ -93,7 +93,7 @@
                         <span class="text">Reviews</span>
                     </a>
                 </li> -->
-                <li class="menu-item active">
+                <li class="menu-item">
                     <a class="menu-link" href="brands"> <i class="icon material-icons md-stars"></i>
                         <span class="text">Brands</span> </a>
                 </li>
@@ -128,6 +128,8 @@
             <br>
         </nav>
     </aside>
+
+    
     <main class="main-wrap">
         <header class="main-header navbar">
             <div class="col-search">
@@ -185,12 +187,9 @@
         </header>
         <section class="content-main">
             <div class="content-header">
+                <h2 class="content-title">Sellers list</h2>
                 <div>
-                    <h2 class="content-title card-title">Brand </h2>
-                    <p>Brand and vendor management</p>
-                </div>
-                <div>
-                    <a href="addbrands" class="btn btn-primary"><i class="text-muted material-icons md-post_add"></i>Add New Brand</a>
+                    <a href="#" class="btn btn-primary"><i class="material-icons md-plus"></i> Create new</a>
                 </div>
             </div>
             <div class="card mb-4">
@@ -221,23 +220,67 @@
                         <table class="table table-hover">
                             <thead>
                                 <tr>
-                                    <th>Name</th>
-                                    
-                                    <th>Description</th>
+                                    <th>User</th>
+                                    <th>Email</th>
                                     <th>Status</th>
+                                    <th>Phone</th>
                                     <th class="text-end"> Action </th>
                                 </tr>
                             </thead>
-                            
+                            <tbody>
+                                <% user.forEach(user=> { %>
+                                    <tr>
+                                        <td>
+                                            <%= user.name%>
+                                        </td>
+                                        <td>
+                                            <%= user.email %>
+                                        </td>
+                                        <td>
+                                            <%= user.phno %>
+                                        </td>
+                                        <td>
+                                            <% if(user.isBlocked){ %>
+                                                <span class="badge rounded-pill alert-danger">Blocked</span>
+                                                <% }else { %>
+                                                    <span class="badge rounded-pill alert-success">Active</span>
+                                                    <% } %>
+                                        </td>
+                                        <td>
+                                            <% if(user.isBlocked){ %>
+                                                <form action="/admin/unblockuser/<%= user._id %>" method="post">
+                                                    <button class="rounded-pill btn btn-outline-warning btn-sm" type="submit">Unblock</button>
+                                                </form>
+                                                <% }else{ %>
+                                                    <form action="/admin/blockuser/<%= user._id %>" method="post">
+                                                        <button class="rounded-pill btn btn-outline-warning btn-sm" type="submit">Block</button>
+                                                    </form>
+                                                    <% } %>
+                                        </td>
+                                    </tr>
+                                    <% }); %>
+                            </tbody>
                         </table> <!-- table-responsive.// -->
                     </div>
                 </div> <!-- card-body end// -->
             </div> <!-- card end// -->
+            <div class="pagination-area mt-15 mb-50">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-start">
+                        <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                        <li class="page-item"><a class="page-link" href="#">02</a></li>
+                        <li class="page-item"><a class="page-link" href="#">03</a></li>
+                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                        <li class="page-item"><a class="page-link" href="#">16</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
+                    </ul>
+                </nav>
+            </div>
         </section> <!-- content-main end// -->
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">
-                    <script>
+                    <script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
                     document.write(new Date().getFullYear())
                     </script> ©, Evara - HTML Ecommerce Template .
                 </div>
@@ -259,5 +302,5 @@
 </body>
 
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-brands.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:49 GMT -->
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-sellers-list.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:23 GMT -->
 </html>

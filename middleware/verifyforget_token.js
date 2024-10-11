@@ -6,7 +6,7 @@ const verifyForgetToken = (req, res, next)=>{
     
 
     if(!token){
-        return res.status(401).json({message:'no token found'})
+        return res.redirect('/auth/login/forgotpassword')
     }
     try {
         const decode = jwt.verify(token,process.env.JWT_OTP_TOKEN)
@@ -16,7 +16,7 @@ const verifyForgetToken = (req, res, next)=>{
         
         next()
     } catch (error) {
-        console.log('no token found',error)
+        console.log('No token found',error)
     }
 }
 
