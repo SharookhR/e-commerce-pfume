@@ -225,9 +225,42 @@
                                     
                                     <th>Description</th>
                                     <th>Status</th>
-                                    <th class="text-end"> Action </th>
+                                    
+                                    <th > Action </th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                <% category.forEach(category=> { %>
+                                        <tr>
+                                            <td><%= category.title %></td>
+                                            <td><%= category.description %></td>
+                                            <td>
+                                                <% if(category.isBlocked){ %>
+                                                    <span class="badge rounded-pill alert-danger">Unlisted</span>
+                                                    <% } else { %>
+                                                        <span class="badge rounded-pill alert-success">Listed</span>
+                                                        <% } %>
+                                            </td>
+                                            
+                                            <td>
+                                                <% if(category.isBlocked){ %>
+                                                    <form action="/admin/unblockcategory/<%=category._id %>" method="post">
+                                                        <button class="rounded-pill btn btn-success btn-sm text-light" type="submit">Unblock</button>
+                                                    </form>
+                                                <% } else {%>
+                                                    <form action="/admin/blockcategory/<%=category._id %>" method="post">
+                                                        <button class="rounded-pill btn btn-danger btn-sm " type="submit">Block</button>
+                                                    </form>
+                                                    
+                                                    <% } %>
+                                                    <br>
+                                                    <a href="editcategories/<%= category._id %>" class="rounded-pill  btn  btn-xs btn-primary" type="submit">Edit</a>
+
+                                            </td>
+                                            
+                                        </tr>
+                                <% }) ;%>
+                            </tbody>
                             
                         </table> <!-- table-responsive.// -->
                     </div>

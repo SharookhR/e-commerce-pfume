@@ -12,11 +12,15 @@ const userSchema = new mongoose.Schema({
     },
     phone:{
         type:String,
-        required:true
+        required:function (){
+            return !this.googleId;
+        }
     },
     password:{
         type:String,
-        required:true
+        required:function (){
+            return !this.googleId;
+        }
     },
     isAdmin:{
         type:Number,
@@ -25,9 +29,12 @@ const userSchema = new mongoose.Schema({
     isBlocked:{
         type:Boolean,
         default:false
+    },
+    googleId:{
+        type:String
     }
 
-})
+},{timestamps:true})
 
 userSchema.methods.comparePassword = async function (enteredPassword) {
     return await bcrypt.compare(enteredPassword, this.password);

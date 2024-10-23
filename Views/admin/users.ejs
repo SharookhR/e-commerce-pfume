@@ -249,11 +249,11 @@
                                         <td>
                                             <% if(user.isBlocked){ %>
                                                 <form action="/admin/unblockuser/<%= user._id %>" method="post">
-                                                    <button class="rounded-pill btn btn-outline-warning btn-sm" type="submit">Unblock</button>
+                                                    <button class="rounded-pill btn btn-success btn-sm text-light" type="submit">Unblock</button>
                                                 </form>
                                                 <% }else{ %>
                                                     <form action="/admin/blockuser/<%= user._id %>" method="post">
-                                                        <button class="rounded-pill btn btn-outline-warning btn-sm" type="submit">Block</button>
+                                                        <button class="rounded-pill btn btn-danger btn-sm" type="submit">Block</button>
                                                     </form>
                                                     <% } %>
                                         </td>

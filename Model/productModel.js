@@ -1,5 +1,4 @@
 const mongoose = require('mongoose')
-const { brands } = require('../Controller/adminController')
 
 const productSchema = new mongoose.Schema({
     title: {
@@ -10,9 +9,9 @@ const productSchema = new mongoose.Schema({
         type: String,
         required: true
     },
-    brandname: {
+    brandName: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "Brand",
+        ref: "Brands",
         required: true
     },
     isPublished:{
@@ -21,7 +20,7 @@ const productSchema = new mongoose.Schema({
     },
     category:{
         type:mongoose.Schema.Types.ObjectId,
-        ref:'category',
+        ref:'categories',
         require:true
     },
     images: {
@@ -34,7 +33,6 @@ const productSchema = new mongoose.Schema({
     },
     isBlocked:{
         type:Boolean,
-        required:true,
         default:false
     },
     stock: {

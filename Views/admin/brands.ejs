@@ -222,12 +222,43 @@
                             <thead>
                                 <tr>
                                     <th>Name</th>
-                                    
                                     <th>Description</th>
                                     <th>Status</th>
-                                    <th class="text-end"> Action </th>
+                                    <th> Action </th>
                                 </tr>
                             </thead>
+                            <tbody>
+                                <% brand.forEach(brand=> { %>
+                                        <tr>
+                                            <td><%= brand.brandName %></td>
+                                            <td><%= brand.description %></td>
+                                            <td>
+                                                <% if(brand.isBlocked){ %>
+                                                    <span class="badge rounded-pill alert-danger">Unlisted</span>
+                                                    <% } else { %>
+                                                        <span class="badge rounded-pill alert-success">Listed</span>
+                                                        <% } %>
+                                            </td>
+                                            
+                                            <td>
+                                                <% if(brand.isBlocked){ %>
+                                                    <form action="/admin/unblockbrand/<%=brand._id %>" method="post">
+                                                        <button class="rounded-pill btn btn-success btn-sm text-light" type="submit">Unblock</button>
+                                                    </form>
+                                                <% } else {%>
+                                                    <form action="/admin/blockbrand/<%=brand._id %>" method="post">
+                                                        <button class="rounded-pill btn btn-danger btn-sm " type="submit">Block</button>
+                                                    </form>
+                                                    
+                                                    <% } %>
+                                                    <br>
+                                                    <a href="editbrands/<%= brand._id %>" class="rounded-pill  btn  btn-xs btn-primary" type="submit">Edit</a>
+
+                                            </td>
+                                            
+                                        </tr>
+                                <% }) ;%>
+                            </tbody>
                             
                         </table> <!-- table-responsive.// -->
                     </div>

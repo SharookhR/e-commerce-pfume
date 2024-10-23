@@ -3,6 +3,7 @@
 
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:31 GMT -->
+
 <head>
     <meta charset="utf-8">
     <title>Evara Dashboard</title>
@@ -17,7 +18,9 @@
     <link rel="shortcut icon" type="image/x-icon" href="/admin/assets/imgs/theme/favicon.svg">
     <!-- Template CSS -->
     <link href="/admin/assets/css/main.css" rel="stylesheet" type="text/css" />
-    
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.css" />
+
+
 </head>
 
 <body>
@@ -28,7 +31,8 @@
                 <img src="/admin/assets/imgs/theme/logo.svg" class="logo" alt="Evara Dashboard">
             </a>
             <div>
-                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i>
+                </button>
             </div>
         </div>
         <nav>
@@ -48,7 +52,7 @@
                         <span class="text">Products</span>
                     </a>
                 </li>
-                
+
                 <!-- <li class="menu-item has-submenu">
                     <a class="menu-link" href="page-sellers-cards.html"> <i class="icon material-icons md-store"></i>
                         <span class="text">Sellers</span>
@@ -137,7 +141,8 @@
                 <form class="searchform">
                     <div class="input-group">
                         <input list="search_terms" type="text" class="form-control" placeholder="Search term">
-                        <button class="btn btn-light bg" type="button"> <i class="material-icons md-search"></i></button>
+                        <button class="btn btn-light bg" type="button"> <i
+                                class="material-icons md-search"></i></button>
                     </div>
                     <datalist id="search_terms">
                         <option value="Products">
@@ -148,7 +153,8 @@
                 </form>
             </div>
             <div class="col-nav">
-                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i class="material-icons md-apps"></i> </button>
+                <button class="btn btn-icon btn-mobile me-auto" data-trigger="#offcanvas_aside"> <i
+                        class="material-icons md-apps"></i> </button>
                 <ul class="nav">
                     <li class="nav-item">
                         <a class="nav-link btn-icon" href="#">
@@ -157,30 +163,44 @@
                         </a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i> </a>
+                        <a class="nav-link btn-icon darkmode" href="#"> <i class="material-icons md-nights_stay"></i>
+                        </a>
                     </li>
                     <li class="nav-item">
-                        <a href="#" class="requestfullscreen nav-link btn-icon"><i class="material-icons md-cast"></i></a>
+                        <a href="#" class="requestfullscreen nav-link btn-icon"><i
+                                class="material-icons md-cast"></i></a>
                     </li>
                     <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage" aria-expanded="false"><i class="material-icons md-public"></i></a>
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownLanguage"
+                            aria-expanded="false"><i class="material-icons md-public"></i></a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownLanguage">
-                            <a class="dropdown-item text-brand" href="#"><img src="/admin/assets/imgs/theme/flag-us.png" alt="English">English</a>
-                            <a class="dropdown-item" href="#"><img src="/admin/assets/imgs/theme/flag-fr.png" alt="Français">Français</a>
-                            <a class="dropdown-item" href="#"><img src="/admin/assets/imgs/theme/flag-jp.png" alt="Français">日本語</a>
-                            <a class="dropdown-item" href="#"><img src="/admin/assets/imgs/theme/flag-cn.png" alt="Français">中国人</a>
+                            <a class="dropdown-item text-brand" href="#"><img src="/admin/assets/imgs/theme/flag-us.png"
+                                    alt="English">English</a>
+                            <a class="dropdown-item" href="#"><img src="/admin/assets/imgs/theme/flag-fr.png"
+                                    alt="Français">Français</a>
+                            <a class="dropdown-item" href="#"><img src="/admin/assets/imgs/theme/flag-jp.png"
+                                    alt="Français">日本語</a>
+                            <a class="dropdown-item" href="#"><img src="/admin/assets/imgs/theme/flag-cn.png"
+                                    alt="Français">中国人</a>
                         </div>
                     </li>
                     <li class="dropdown nav-item">
-                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount" aria-expanded="false"> <img class="img-xs rounded-circle" src="/admin/assets/imgs/people/avatar2.jpg" alt="User"></a>
+                        <a class="dropdown-toggle" data-bs-toggle="dropdown" href="#" id="dropdownAccount"
+                            aria-expanded="false"> <img class="img-xs rounded-circle"
+                                src="/admin/assets/imgs/people/avatar2.jpg" alt="User"></a>
                         <div class="dropdown-menu dropdown-menu-end" aria-labelledby="dropdownAccount">
-                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit Profile</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account Settings</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-account_balance_wallet"></i>Wallet</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-perm_identity"></i>Edit
+                                Profile</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-settings"></i>Account
+                                Settings</a>
+                            <a class="dropdown-item" href="#"><i
+                                    class="material-icons md-account_balance_wallet"></i>Wallet</a>
                             <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
-                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
+                            <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help
+                                center</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                            <a class="dropdown-item text-danger" href="#"><i
+                                    class="material-icons md-exit_to_app"></i>Logout</a>
                         </div>
                     </li>
                 </ul>
@@ -193,7 +213,7 @@
                         <h2 class="content-title">Add New Product</h2>
                         <div>
                             <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Back</button>
-                            <button class="btn btn-md rounded font-sm hover-up">Add</button>
+
                         </div>
                     </div>
                 </div>
@@ -203,90 +223,74 @@
                             <h4>Basic</h4>
                         </div>
                         <div class="card-body">
-                            <form>
+                            <form method="post" action="/admin/addproduct" enctype="multipart/form-data">
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Product title</label>
-                                    <input type="text" placeholder="Type here" class="form-control" id="product_name">
+                                    <input type="text" placeholder="Type here" class="form-control" name="productTitle"
+                                        id="product_name">
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Full description</label>
-                                    <textarea placeholder="Type here" class="form-control" rows="4"></textarea>
+                                    <textarea placeholder="Type here" class="form-control" name="productDescription"
+                                        rows="4"></textarea>
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-4">
                                         <div class="mb-4">
-                                            <label class="form-label">Regular price</label>
+                                            <label class="form-label">Price</label>
                                             <div class="row gx-2">
-                                                <input placeholder="$" type="text" class="form-control">
+                                                <input placeholder="$" name="price" type="text" class="form-control">
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="mb-4">
-                                            <label class="form-label">Promotional price</label>
-                                            <input placeholder="$" type="text" class="form-control">
+                                            <label class="form-label"> Stock</label>
+                                            <input name="stock" type="text" class="form-control">
                                         </div>
                                     </div>
-                                    <div class="col-lg-4">
-                                        <label class="form-label">Currency</label>
-                                        <select class="form-select">
-                                            <option> INR </option>
-                                            <option> USD </option>
-                                        </select>
+
+                                </div>
+                                <div class="input-upload">
+                                    <label for="image" class="form-label">Upload Images</label>
+                                    <input type="file" name="images" class="form-control" id="images" accept="images/*" multiple
+                                        onchange="handleFiles(event)" />
+                                    <div id="imagePreview" class="mt-3"></div>
+                                    <span id="errorimage" class="text-danger"></span>
+                                </div>
+
+                                <div id="cropModal" style="display: none">
+                                    <img id="croppingImage" style="max-width: 100%" />
+                                    <button type="button" class="btn" id="cropButton" onclick="cropImage()">
+                                        Crop Image
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="row gx-2">
+                                        <div class="col-sm-6 mb-3">
+                                            <label class="form-label">Category</label>
+                                            <select name="category" class="form-select">
+                                                <% category.forEach(element=>{ %>
+                                                    <option value="<%= element._id %>">
+                                                        <%= element.title %>
+                                                    </option>
+                                                    <% }); %>
+                                            </select>
+                                        </div>
+                                        <div class="col-sm-6 mb-3">
+                                            <label class="form-label">Brand</label>
+                                            <select name="brandName" class="form-select">
+                                                <% brand.forEach(element=>{ %>
+                                                    <option value="<%= element._id %>">
+                                                        <%= element.brandName %>
+                                                    </option>
+                                                    <% }); %>
+                                            </select>
+                                        </div>
                                     </div>
                                 </div>
-                                <div class="mb-4">
-                                    <label class="form-label">Tax rate</label>
-                                    <input type="text" placeholder="%" class="form-control" id="product_name">
-                                </div>
-                                <label class="form-check mb-4">
-                                    <input class="form-check-input" type="checkbox" value="">
-                                    <span class="form-check-label"> Make a template </span>
-                                </label>
+                                <button type="submit" class="btn btn-md rounded font-sm hover-up">Add</button>
                             </form>
-                        </div>
-                    </div> <!-- card end// -->
-                </div>
-                <div class="col-lg-3">
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h4>Media</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="input-upload">
-                                <img src="/admin/assets/imgs/theme/upload.svg" alt="">
-                                <input class="form-control" type="file">
-                            </div>
-                        </div>
-                    </div> <!-- card end// -->
-                    <div class="card mb-4">
-                        <div class="card-header">
-                            <h4>Organization</h4>
-                        </div>
-                        <div class="card-body">
-                            <div class="row gx-2">
-                                <div class="col-sm-6 mb-3">
-                                    <label class="form-label">Category</label>
-                                    <select class="form-select">
-                                        <option> Men </option>
-                                        <option>  Women </option>
-                                        <option> Unisex </option>
-                                        
-                                    </select>
-                                </div>
-                                <div class="col-sm-6 mb-3">
-                                    <label class="form-label">Brand</label>
-                                    <select class="form-select">
-                                        <option> Calvin Klien </option>
-                                        <option> Hugo Boss </option>
-                                        <option> Davidoff </option>
-                                    </select>
-                                </div>
-                                <div class="mb-4">
-                                    <label for="product_name" class="form-label">Tags</label>
-                                    <input type="text" class="form-control">
-                                </div>
-                            </div> <!-- row.// -->
                         </div>
                     </div> <!-- card end// -->
                 </div>
@@ -296,7 +300,7 @@
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">
                     <script>
-                    document.write(new Date().getFullYear())
+                        document.write(new Date().getFullYear())
                     </script> ©, Evara - HTML Ecommerce Template .
                 </div>
                 <div class="col-sm-6">
@@ -314,8 +318,187 @@
     <script src="/admin/assets/js/vendors/jquery.fullscreen.min.js"></script>
     <!-- Main Script -->
     <script src="/admin/assets/js/main.js" type="text/javascript"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
+    <script>
+        let cropper;
+        let currentFile;
+        let currentImgElement;
+        let filesArray = []; // To keep track of all selected files
+        let croppedFileIndex; // To track the index of the cropped file
+    
+        function handleFiles(event) {
+            const imagePreviewContainer = document.getElementById("imagePreview");
+    
+            // Get newly selected files
+            const newFiles = Array.from(event.target.files);
+            if (newFiles.length === 0) return;
+    
+            // Append new files to the filesArray, not overwrite it
+            filesArray = filesArray.concat(newFiles);
+    
+            // Clear the preview container and re-render all images
+            imagePreviewContainer.innerHTML = "";
+    
+            filesArray.forEach((file, index) => {
+                const reader = new FileReader();
+    
+                reader.onload = (e) => {
+                    const imgContainer = document.createElement("div");
+                    imgContainer.style.display = "inline-block";
+                    imgContainer.style.position = "relative";
+                    imgContainer.style.marginRight = "10px";
+    
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.style.width = "100px";
+                    img.style.cursor = "pointer";
+                    img.onclick = () => openCropper(e.target.result, img, index);
+    
+                    // Create the remove button for each image
+                    const removeButton = document.createElement("button");
+                    removeButton.innerText = "X";
+                    removeButton.style.position = "absolute";
+                    removeButton.style.top = "0";
+                    removeButton.style.right = "0";
+                    removeButton.style.backgroundColor = "red";
+                    removeButton.style.color = "white";
+                    removeButton.style.border = "none";
+                    removeButton.style.cursor = "pointer";
+                    removeButton.onclick = () => removeImage(index);
+    
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(removeButton);
+                    imagePreviewContainer.appendChild(imgContainer);
+                };
+    
+                reader.readAsDataURL(file);
+            });
+        }
+    
+        function removeImage(index) {
+            filesArray.splice(index, 1); // Remove the file from the array
+    
+            // Re-render the remaining images after removing the selected one
+            const imagePreviewContainer = document.getElementById("imagePreview");
+            imagePreviewContainer.innerHTML = "";
+    
+            filesArray.forEach((file, newIndex) => {
+                const reader = new FileReader();
+    
+                reader.onload = (e) => {
+                    const imgContainer = document.createElement("div");
+                    imgContainer.style.display = "inline-block";
+                    imgContainer.style.position = "relative";
+                    imgContainer.style.marginRight = "10px";
+    
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.style.width = "100px";
+                    img.style.cursor = "pointer";
+                    img.onclick = () => openCropper(e.target.result, img, newIndex);
+    
+                    // Recreate the remove button for each image
+                    const removeButton = document.createElement("button");
+                    removeButton.innerText = "X";
+                    removeButton.style.position = "absolute";
+                    removeButton.style.top = "0";
+                    removeButton.style.right = "0";
+                    removeButton.style.backgroundColor = "red";
+                    removeButton.style.color = "white";
+                    removeButton.style.border = "none";
+                    removeButton.style.cursor = "pointer";
+                    removeButton.onclick = () => removeImage(newIndex);
+    
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(removeButton);
+                    imagePreviewContainer.appendChild(imgContainer);
+                };
+    
+                reader.readAsDataURL(file);
+            });
+    
+            // Close the crop modal if it's open
+            const cropModal = document.getElementById("cropModal");
+            if (cropModal.style.display === "block") {
+                cropModal.style.display = "none";
+            }
+    
+            // Destroy cropper instance if it exists
+            if (cropper) {
+                cropper.destroy();
+                cropper = null;
+            }
+    
+            // Update the input with the new files array after removal
+            updateInputWithFiles();
+        }
+    
+        function openCropper(imageSrc, imgElement, index) {
+            const cropModal = document.getElementById("cropModal");
+            const croppingImage = document.getElementById("croppingImage");
+    
+            currentImgElement = imgElement;
+            croppedFileIndex = index; // Store index of file being cropped
+            currentFile = filesArray[croppedFileIndex];
+
+            croppingImage.src = imageSrc;
+            cropModal.style.display = "block";
+    
+            if (cropper) {
+                cropper.destroy();
+            }
+    
+            cropper = new Cropper(croppingImage, {
+                aspectRatio: 1,
+                viewMode: 2,
+            });
+        }
+    
+        function cropImage() {
+            const canvas = cropper.getCroppedCanvas();
+    
+            canvas.toBlob((blob) => {
+                const croppedFile = new File([blob], currentFile.name, { type: 'image/png' });
+    
+                filesArray[croppedFileIndex] = croppedFile; // Replace the original file with the cropped one
+    
+                // Now, reassign all files (including cropped) to the input field
+                const dataTransfer = new DataTransfer();
+    
+                filesArray.forEach((file) => {
+                    dataTransfer.items.add(file); // Add all files (cropped and uncropped)
+                });
+    
+                const fileInput = document.getElementById('images');
+                fileInput.files = dataTransfer.files; // Update the file input with all files
+    
+                // Update the preview with cropped image
+                currentImgElement.src = URL.createObjectURL(croppedFile);
+    
+                // Close the crop modal
+                document.getElementById("cropModal").style.display = "none";
+    
+                // Destroy the cropper to clean up
+                cropper.destroy();
+                cropper = null;
+            }, 'image/png');
+        }
+    
+        function updateInputWithFiles() {
+            const fileInput = document.getElementById('image');
+            const dataTransfer = new DataTransfer();
+    
+            filesArray.forEach((file) => {
+                dataTransfer.items.add(file);
+            });
+    
+            fileInput.files = dataTransfer.files; // Update input with all files (cropped and uncropped)
+        }
+    </script>
+    
 </body>
 
 
 <!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->
+
 </html>

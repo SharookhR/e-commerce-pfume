@@ -1,5 +1,6 @@
 const jwt =  require('jsonwebtoken')
 const {generateAccessToken} =require('../utility/token')
+const User = require('../Model/UserModel')
 require('dotenv').config()
 
 const verifyRefreshToken = async (req, res, next)=>{
@@ -14,6 +15,16 @@ const verifyRefreshToken = async (req, res, next)=>{
                     return res.redirect('/auth/login')
                 }
                 req.userId = decode.userId
+                const userId = decode.userId
+
+                const user = await User.findById(userId)
+
+                if(user.isBlocked){
+                    res.clearCookie("accessToken");
+                    res.clearCookie('refreshToken')
+                    return res.redirect("/auth/login")
+                }
+
                 return next()
 
             } catch (error) {
@@ -39,7 +50,7 @@ const verifyRefreshToken = async (req, res, next)=>{
                     res.cookie('accessToken', newAccessToken, {
                         httpOnly:true,
                         secure:process.env.NODE_ENV==='production',
-                        maxAge: 1 * 60 * 1000
+                        maxAge: 10 * 60 * 1000
                     })
                     next()
                 }

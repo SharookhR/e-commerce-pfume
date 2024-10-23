@@ -406,6 +406,31 @@ const forgotPasswordResendOtp = async (req, res) => {
     }
 }
 
+const googleSignin = async (req, res)=>{
+    try {
+        
+        const userId=req.user._id
+        
+        const accessToken= generateAccessToken(userId)
+        const refreshToken= generateRefreshToken(userId)
+
+        res.cookie('accessToken', accessToken, {
+            httpOnly:true,
+            ssecure: process.env.NODE_ENV === 'production',
+            maxAge: 10 * 60 * 1000
+        })
+        res.cookie('refreshToken', refreshToken, {
+            httpOnly: true,
+            secure: process.env.NODE_ENV === 'production',
+            maxAge: 30 * 24 * 60 * 60 * 1000
+        });
+        return res.redirect('/user/home')
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
 module.exports = {
     renderLogin,
     renderSignUp,
@@ -423,6 +448,7 @@ module.exports = {
     verifyForgotPassswordOtp,
     renderResetPassword,
     resetPassword,
-    forgotPasswordResendOtp
+    forgotPasswordResendOtp,
+    googleSignin
 
 }
