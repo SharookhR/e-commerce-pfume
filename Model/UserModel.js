@@ -1,6 +1,5 @@
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt');
-const { type } = require('express/lib/response');
 const userSchema = new mongoose.Schema({
     name:{
         type:String,

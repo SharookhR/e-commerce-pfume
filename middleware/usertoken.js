@@ -18,8 +18,15 @@ const verifyRefreshToken = async (req, res, next)=>{
                 const userId = decode.userId
 
                 const user = await User.findById(userId)
+                if(!user){
+                    res.clearCookie("accessToken");
+                    res.clearCookie('refreshToken')
+                    console.log("cookie cleared");
+                    
+                    return res.redirect("/auth/login")
+                }
 
-                if(user.isBlocked){
+                if(user.isBlocked ){
                     res.clearCookie("accessToken");
                     res.clearCookie('refreshToken')
                     return res.redirect("/auth/login")
@@ -28,15 +35,14 @@ const verifyRefreshToken = async (req, res, next)=>{
                 return next()
 
             } catch (error) {
-                return res.redirect('/auth/login')
-                console.log(error);
-                
+                return res.redirect('/auth/login')     
             }  
         }
-        else{
+        else{            
             if(!refreshToken){
-                res.redirect('/auth/login')
                 console.log("Refresh token expired");
+                return res.redirect('/auth/login')
+                
                 
             }
             else{
@@ -45,20 +51,19 @@ const verifyRefreshToken = async (req, res, next)=>{
                 const userId = decode.userId
                 
                 if(decode){
-
-                    const newAccessToken = generateAccessToken(userId)
+                    const newAccessToken = generateAccessToken(userId)    
+                    console.log("New token generated");
                     res.cookie('accessToken', newAccessToken, {
                         httpOnly:true,
-                        secure:process.env.NODE_ENV==='production',
-                        maxAge: 10 * 60 * 1000
-                    })
+                        secure:false,
+                        maxAge: 10 * 6 *1000
+                    })                    
                     next()
                 }
             }
         }
     } catch (error) {
         console.log("Access token expired or invalid", error);
-        
     }
 }
 

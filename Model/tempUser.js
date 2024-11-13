@@ -28,14 +28,14 @@ const tempUserSchema = new mongoose.Schema({
         type:String,
         default:null
     },
-    otpExpiredAt:{
+    otpExpiresAt:{
         type: Date,
         default: Date.now
     },
     createdAt:{
         type: Date,
         default:Date.now,
-        expires: 300
+        expires: 1000
     },
     lastOtp:{
         type:Date,

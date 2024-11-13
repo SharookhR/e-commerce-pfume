@@ -81,7 +81,7 @@
             color: #000;
             text-decoration: none;
         }
-        .error-message {
+        #error-message {
             color: red;
             margin-bottom: 20px;
         }
@@ -108,8 +108,11 @@
         <div class="logo" aria-label="PFUME logo">🔒 PFUME</div>
         <div class="container">
             <h1>Verify OTP</h1>
+            <div>
+                <p style="color: black;" id="timer"></p>
+            </div>
             <% if(typeof errorMessage !=='undefined'){ %>
-                <div class="error-message"><%= errorMessage %></div>
+                <div id="error-message" ><%= errorMessage %></div>
                <%} %>
             <form method="post" action="/auth/signup/otp/verify">
                 <label for="email">Enter OTP</label>
@@ -124,6 +127,42 @@
             </form>
             
         </div>
+
+
+
+        
     </div>
+    <script>
+        const expiresAt = parseInt("<%= expiresAt %>");
+        const currentTime = Date.now();
+        let timeLeft = Math.floor((expiresAt - currentTime) / 1000);
+        const timerElement = document.getElementById("timer");
+        const resendOtpContainer = document.getElementById("resendOtpContainer");
+
+        const countdownTimer = setInterval(() => {
+            if (timeLeft <= 0) {
+                clearInterval(countdownTimer);
+                
+                document.querySelector("button").disabled = true;
+                resendOtpContainer.style.display = "block";
+            } else {
+                let minutes = Math.floor(timeLeft / 60);
+                let seconds = timeLeft % 60;
+                seconds = seconds < 10 ? "0" + seconds : seconds;
+                timerElement.textContent =`${minutes}:${seconds}`;
+                timeLeft--;
+            }
+        }, 1000);
+
+        document.addEventListener('DOMContentLoaded', function() {
+       const errorMessage = document.getElementById('error-message');
+       
+       if (errorMessage) {
+           setTimeout(() => {
+               errorMessage.style.display = 'none';
+           }, 5000);
+       }
+   });
+    </script>
 </body>
 </html>

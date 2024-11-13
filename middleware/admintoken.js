@@ -4,8 +4,8 @@ require("dotenv").config();
 const User = require("../Model/UserModel");
 
 const verifyRefreshTokenAdmin = async (req, res, next) => {
-  const accessToken = req.cookies?.accessToken;
-  const refreshToken = req.cookies?.refershToken;
+  const accessToken = req.cookies.accessToken;
+  const refreshToken = req.cookies.refreshToken;
 
   try {
     if (accessToken) {
@@ -31,7 +31,10 @@ const verifyRefreshTokenAdmin = async (req, res, next) => {
       }
     } else {
       if (!refreshToken) {
+        console.log("Refresh token expired");
         return res.redirect("/auth/adminlogin");
+      
+        
       } else {
         const decode = jwt.verify(
           refreshToken,
@@ -41,13 +44,14 @@ const verifyRefreshTokenAdmin = async (req, res, next) => {
         userId = decode.userId;
 
         if (decode) {
+          
           const newAccessToken = generateAccessToken(userId);
           console.log("New access token created");
 
           res.cookie("accessToken", newAccessToken, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
-            maxAge: 10 * 60 * 1000,
+            maxAge: 10 *  6 * 1000,
           });
           next();
         }

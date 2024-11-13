@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PFUME - Account Login</title>
+    <title>PFUME - Account Signup</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -95,7 +95,7 @@
             color: #000;
             text-decoration: none;
         }
-        .error-message {
+        #error-message {
             color: red;
             margin-bottom: 20px;
         }
@@ -120,11 +120,15 @@
 
 <body>
     <div class="page-wrapper">
-        <div class="logo" aria-label="PFUME logo">🔒 PFUME</div>
+        <div class="logo" aria-label="PFUME logo">
+            <div  class="logo" aria-label="PFUME logo">
+                <img style="width: 200px; height: 80px;" src="/user/assets/images/logo/logo.png" alt="logo">
+            </div>
+        </div>
         <div class="container">
             <h1>Account Signup</h1>
             <% if(typeof errorMessage !=='undefined'){ %>
-                <div class="error-message"><%= errorMessage %></div>
+                <div id="error-message"><%= errorMessage %></div>
                <%} %>
             <form id="registrationForm" method="post">
                 <label for="name">Fullname</label>
@@ -145,33 +149,27 @@
 
                 
 
-                <div id="formErrorMessages" style="color: red;"></div>
+                
                 <button type="submit">Create Account</button>
             </form>
             <div class="signup">
-                Already a member ? <a href="login" aria-label="Sign up here">Login</a>
+                Already a member ? <a href="/auth/login" aria-label="Sign up here">Login</a>
             </div>
         </div>
     </div>
     <script>
         document.addEventListener('DOMContentLoaded', () => {
     const form = document.getElementById('registrationForm');
-    const errorMessagesDiv = document.getElementsByClassName('error-message');
-
+    const errorMessagesDiv = document.getElementById('error-message');
     form.addEventListener('submit', (event) => {
-        // Clear previous error messages
         errorMessagesDiv.innerHTML = '';
         let isValid = true;
         let errorMessages = '';
-
-        // Get form field values
         const name = document.getElementById('name').value.trim();
         const email = document.getElementById('email').value.trim();
         const password = document.getElementById('password').value.trim();
         const confirmPassword = document.getElementById('confirmpassword').value.trim();
         const phone = document.getElementById('phone').value.trim();
-
-        // Fullname validation (should not be empty and should have at least 3 characters)
         if (name === '') {
             errorMessages += '<p>Fullname is required.</p>';
             isValid = false;
@@ -179,8 +177,6 @@
             errorMessages += '<p>Fullname must be at least 3 characters long.</p>';
             isValid = false;
         }
-
-        // Email validation
         if (email === '') {
             errorMessages += '<p>Email is required.</p>';
             isValid = false;
@@ -188,8 +184,6 @@
             errorMessages += '<p>Invalid email format.</p>';
             isValid = false;
         }
-
-        // Phone number validation (optional: can be customized to your needs)
         if (phone === '') {
             errorMessages += '<p>Phone number is required.</p>';
             isValid = false;
@@ -197,8 +191,6 @@
             errorMessages += '<p>Phone number must be 10 digits.</p>';
             isValid = false;
         }
-
-        // Password validation
         if (password === '') {
             errorMessages += '<p>Password is required.</p>';
             isValid = false;
@@ -206,8 +198,6 @@
             errorMessages += '<p>Password must be at least 6 characters long.</p>';
             isValid = false;
         }
-
-        // Confirm password validation
         if (confirmPassword === '') {
             errorMessages += '<p>Confirm Password is required.</p>';
             isValid = false;
@@ -215,25 +205,29 @@
             errorMessages += '<p>Passwords do not match.</p>';
             isValid = false;
         }
-
-        // Display all error messages
         if (!isValid) {
             errorMessagesDiv.innerHTML = errorMessages;
-            event.preventDefault();  // Prevent form submission if invalid
+            event.preventDefault(); 
+        }
+        if (errorMessagesDiv.innerHTML !== '') {
+            setTimeout(() => {
+                errorMessagesDiv.innerHTML = '';
+            }, 5000);
         }
     });
-
-    // Helper function to validate email format
     function validateEmail(email) {
         const emailPattern = /^[a-zA-Z0-9._-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
         return emailPattern.test(email);
     }
-
-    // Helper function to validate phone number format (example for a 10-digit number)
     function validatePhoneNumber(phone) {
         const phonePattern = /^[0-9]{10}$/;
         return phonePattern.test(phone);
     }
+    if (errorMessagesDiv.innerHTML !== '') {
+        setTimeout(() => {
+            errorMessagesDiv.innerHTML = '';
+        }, 5000);
+    }   
 });
 
     </script>

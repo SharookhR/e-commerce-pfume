@@ -10,7 +10,7 @@ const resetPassSchema = new mongoose.Schema({
         type:String,
         default:null
     },
-    otpExpiredAt:{
+    otpExpiresAt:{
         type: Date,
         default: Date.now
     },

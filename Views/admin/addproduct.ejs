@@ -6,7 +6,7 @@
 
 <head>
     <meta charset="utf-8">
-    <title>Evara Dashboard</title>
+    <title>PFUME - Admin</title>
     <meta http-equiv="x-ua-compatible" content="ie=edge">
     <meta name="description" content="">
     <meta name="viewport" content="width=device-width, initial-scale=1">
@@ -31,59 +31,51 @@
                 <img src="/admin/assets/imgs/theme/logo.svg" class="logo" alt="Evara Dashboard">
             </a>
             <div>
-                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i>
-                </button>
+                <button class="btn btn-icon btn-aside-minimize"> <i class="text-muted material-icons md-menu_open"></i> </button>
             </div>
         </div>
         <nav>
             <ul class="menu-aside">
                 <li class="menu-item ">
-                    <a class="menu-link" href="dashboard"> <i class="icon material-icons md-home"></i>
+                    <a class="menu-link" href="/admin/dashboard"> <i class="icon material-icons md-home"></i>
                         <span class="text">Dashboard</span>
                     </a>
                 </li>
                 <li class="menu-item ">
-                    <a class="menu-link" href="users"> <i class="icon material-icons md-shopping_cart"></i>
+                    <a class="menu-link" href="/admin/users"> <i class="icon material-icons md-people"></i>
                         <span class="text">Users</span>
                     </a>
                 </li>
                 <li class="menu-item active">
-                    <a class="menu-link" href="products"> <i class="icon material-icons md-shopping_bag"></i>
+                    <a class="menu-link" href="/admin/products"> <i class="icon material-icons md-shopping_bag"></i>
                         <span class="text">Products</span>
                     </a>
                 </li>
-
-                <!-- <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-sellers-cards.html"> <i class="icon material-icons md-store"></i>
-                        <span class="text">Sellers</span>
+                
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/orders"> <i class="icon material-icons md-shopping_cart"></i>
+                        <span class="text">Orders</span>
                     </a>
-                    <div class="submenu">
-                        <a href="page-sellers-cards.html">Sellers cards</a>
-                        <a href="page-sellers-list.html">Sellers list</a>
-                        <a href="page-seller-detail.html">Seller profile</a>
-                    </div>
-                </li> -->
-                <!-- <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-form-product-1.html"> <i class="icon material-icons md-add_box"></i>
-                        <span class="text">Add product</span>
-                    </a>
-                    <div class="submenu">
-                        <a href="page-form-product-1.html">Add product 1</a>
-                        <a href="page-form-product-2.html">Add product 2</a>
-                        <a href="page-form-product-3.html">Add product 3</a>
-                        <a href="page-form-product-4.html">Add product 4</a>
-                    </div>
                 </li>
-                <li class="menu-item has-submenu">
-                    <a class="menu-link" href="page-transactions-1.html"> <i class="icon material-icons md-monetization_on"></i>
-                        <span class="text">Transactions</span>
-                    </a>
-                    <div class="submenu">
-                        <a href="page-transactions-1.html">Transaction 1</a>
-                        <a href="page-transactions-2.html">Transaction 2</a>
-                    </div>
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/brands"> <i class="icon material-icons md-stars"></i>
+                        <span class="text">Brands</span> </a>
                 </li>
-                <li class="menu-item has-submenu">
+                <li class="menu-item">
+                    <a class="menu-link" href="/admin/categories"> <i class="icon material-icons md-stars"></i>
+                        <span class="text">Categories</span> </a>
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/offers"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text"> Offers</span>
+                    </a>
+                </li>
+                <li class="menu-item ">
+                    <a class="menu-link" href="/admin/coupons"> <i class="icon material-icons md-local_offer"></i>
+                        <span class="text">Coupons</span>
+                    </a>
+                </li>
+                <!-- <li class="menu-item has-submenu">
                     <a class="menu-link" href="#"> <i class="icon material-icons md-person"></i>
                         <span class="text">Account</span>
                     </a>
@@ -98,14 +90,7 @@
                         <span class="text">Reviews</span>
                     </a>
                 </li> -->
-                <li class="menu-item">
-                    <a class="menu-link" href="brands"> <i class="icon material-icons md-stars"></i>
-                        <span class="text">Brands</span> </a>
-                </li>
-                <li class="menu-item">
-                    <a class="menu-link" href="categories"> <i class="icon material-icons md-stars"></i>
-                        <span class="text">Categories</span> </a>
-                </li>
+                
                 <!-- <li class="menu-item">
                     <a class="menu-link" disabled href="#"> <i class="icon material-icons md-pie_chart"></i>
                         <span class="text">Statistics</span>
@@ -199,7 +184,7 @@
                             <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help
                                 center</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="#"><i
+                            <a class="dropdown-item text-danger" href="/admin/logout"><i
                                     class="material-icons md-exit_to_app"></i>Logout</a>
                         </div>
                     </li>
@@ -211,10 +196,26 @@
                 <div class="col-9">
                     <div class="content-header">
                         <h2 class="content-title">Add New Product</h2>
+
                         <div>
-                            <button class="btn btn-light rounded font-sm mr-5 text-body hover-up">Back</button>
+                            <a href="/admin/products"
+                                class="btn btn-light rounded font-sm mr-5 text-body hover-up">Back</a>
 
                         </div>
+
+                    </div>
+                    <div class="messages">
+                        <% if (messages.error && messages.error.length> 0) { %>
+                            <div class="alert alert-danger">
+                                <%= messages.error.join('<br>') %>
+                            </div>
+                            <% } %>
+
+                                <% if (messages.success && messages.success.length> 0) { %>
+                                    <div class="alert alert-success">
+                                        <%= messages.success.join('<br>') %>
+                                    </div>
+                                    <% } %>
                     </div>
                 </div>
                 <div class="col-lg-6">
@@ -223,42 +224,41 @@
                             <h4>Basic</h4>
                         </div>
                         <div class="card-body">
-                            <form method="post" action="/admin/addproduct" enctype="multipart/form-data">
+                            <form method="post" action="/admin/addproduct" enctype="multipart/form-data" onsubmit="return submitForm(event)">
                                 <div class="mb-4">
                                     <label for="product_name" class="form-label">Product title</label>
-                                    <input type="text" placeholder="Type here" class="form-control" name="productTitle"
-                                        id="product_name">
+                                    <input type="text" placeholder="Type here" class="form-control" name="productTitle" id="product_name">
+                                    <span id="productTitleError" class="text-danger"></span> 
                                 </div>
                                 <div class="mb-4">
                                     <label class="form-label">Full description</label>
-                                    <textarea placeholder="Type here" class="form-control" name="productDescription"
-                                        rows="4"></textarea>
+                                    <textarea placeholder="Type here" class="form-control" name="productDescription" rows="4"></textarea>
+                                    <span id="productDescriptionError" class="text-danger"></span> 
                                 </div>
                                 <div class="row">
                                     <div class="col-lg-4">
                                         <div class="mb-4">
                                             <label class="form-label">Price</label>
                                             <div class="row gx-2">
-                                                <input placeholder="$" name="price" type="text" class="form-control">
+                                                <input placeholder="$" name="price" type="text" class="form-control" id="price">
+                                                <span id="priceError" class="text-danger"></span> 
                                             </div>
                                         </div>
                                     </div>
                                     <div class="col-lg-4">
                                         <div class="mb-4">
-                                            <label class="form-label"> Stock</label>
-                                            <input name="stock" type="text" class="form-control">
+                                            <label class="form-label">Stock</label>
+                                            <input name="stock" type="text" class="form-control" id="stock">
+                                            <span id="stockError" class="text-danger"></span> 
                                         </div>
                                     </div>
-
                                 </div>
                                 <div class="input-upload">
-                                    <label for="image" class="form-label">Upload Images</label>
-                                    <input type="file" name="images" class="form-control" id="images" accept="images/*" multiple
-                                        onchange="handleFiles(event)" />
+                                    <label for="images" class="form-label">Upload Images</label>
+                                    <input type="file" name="images" class="form-control" id="images" accept="image/*" multiple onchange="addFiles(event)" />
                                     <div id="imagePreview" class="mt-3"></div>
                                     <span id="errorimage" class="text-danger"></span>
                                 </div>
-
                                 <div id="cropModal" style="display: none">
                                     <img id="croppingImage" style="max-width: 100%" />
                                     <button type="button" class="btn" id="cropButton" onclick="cropImage()">
@@ -269,22 +269,23 @@
                                     <div class="row gx-2">
                                         <div class="col-sm-6 mb-3">
                                             <label class="form-label">Category</label>
-                                            <select name="category" class="form-select">
-                                                <% category.forEach(element=>{ %>
+                                            <select name="category" class="form-select" id="category">
+                                                <% category.forEach(element => { %>
                                                     <option value="<%= element._id %>">
                                                         <%= element.title %>
                                                     </option>
-                                                    <% }); %>
+                                                <% }); %>
                                             </select>
+                                            <span id="categoryError" class="text-danger"></span> <!-- Error message for Category -->
                                         </div>
                                         <div class="col-sm-6 mb-3">
                                             <label class="form-label">Brand</label>
-                                            <select name="brandName" class="form-select">
-                                                <% brand.forEach(element=>{ %>
+                                            <select name="brandName" class="form-select" id="brand">
+                                                <% brand.forEach(element => { %>
                                                     <option value="<%= element._id %>">
                                                         <%= element.brandName %>
                                                     </option>
-                                                    <% }); %>
+                                                <% }); %>
                                             </select>
                                         </div>
                                     </div>
@@ -316,6 +317,8 @@
     <script src="/admin/assets/js/vendors/select2.min.js"></script>
     <script src="/admin/assets/js/vendors/perfect-scrollbar.js"></script>
     <script src="/admin/assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Main Script -->
     <script src="/admin/assets/js/main.js" type="text/javascript"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/cropperjs/1.5.12/cropper.min.js"></script>
@@ -323,40 +326,76 @@
         let cropper;
         let currentFile;
         let currentImgElement;
-        let filesArray = []; // To keep track of all selected files
-        let croppedFileIndex; // To track the index of the cropped file
-    
-        function handleFiles(event) {
+        let currentFileIndex;
+        let filesArray = [];
+        function addFiles(event) {
+            const fileInput = document.getElementById('images');
             const imagePreviewContainer = document.getElementById("imagePreview");
-    
-            // Get newly selected files
-            const newFiles = Array.from(event.target.files);
-            if (newFiles.length === 0) return;
-    
-            // Append new files to the filesArray, not overwrite it
-            filesArray = filesArray.concat(newFiles);
-    
-            // Clear the preview container and re-render all images
-            imagePreviewContainer.innerHTML = "";
-    
-            filesArray.forEach((file, index) => {
+            const files = event.target.files;
+            Array.from(files).forEach((file) => {
+                filesArray.push(file);
                 const reader = new FileReader();
-    
                 reader.onload = (e) => {
                     const imgContainer = document.createElement("div");
                     imgContainer.style.display = "inline-block";
                     imgContainer.style.position = "relative";
                     imgContainer.style.marginRight = "10px";
-    
                     const img = document.createElement("img");
                     img.src = e.target.result;
                     img.style.width = "100px";
                     img.style.cursor = "pointer";
-                    img.onclick = () => openCropper(e.target.result, img, index);
-    
-                    // Create the remove button for each image
+                    img.onclick = () => openCropper(e.target.result, img, filesArray.length - 1);
                     const removeButton = document.createElement("button");
-                    removeButton.innerText = "X";
+                    removeButton.textContent = "Remove";
+                    removeButton.style.position = "absolute";
+                    removeButton.style.top = "0";
+                    removeButton.style.right = "0";
+                    removeButton.style.backgroundColor = "red";
+                    removeButton.style.color = "white";
+                    removeButton.style.border = "none";
+                    removeButton.style.cursor = "pointer";
+                    removeButton.onclick = () => removeImage(filesArray.length - 1);
+
+                    imgContainer.appendChild(img);
+                    imgContainer.appendChild(removeButton);
+                    imagePreviewContainer.appendChild(imgContainer);
+                };
+                reader.readAsDataURL(file);
+            });
+            updateFileInput();
+        }
+        function removeImage(index) {
+            filesArray.splice(index, 1); 
+            updateFileInput();
+            refreshImagePreview();
+        }
+        function updateFileInput() {
+            const fileInput = document.getElementById('images');
+            const dataTransfer = new DataTransfer();
+            filesArray.forEach(file => {
+                dataTransfer.items.add(file);
+            });
+            fileInput.files = dataTransfer.files;
+        }
+        function refreshImagePreview() {
+            const imagePreviewContainer = document.getElementById("imagePreview");
+            imagePreviewContainer.innerHTML = ""; 
+
+            filesArray.forEach((file, index) => {
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const imgContainer = document.createElement("div");
+                    imgContainer.style.display = "inline-block";
+                    imgContainer.style.position = "relative";
+                    imgContainer.style.marginRight = "10px";
+
+                    const img = document.createElement("img");
+                    img.src = e.target.result;
+                    img.style.width = "100px";
+                    img.style.cursor = "pointer";
+                    img.onclick = () => openCropper(e.target.result, img, index); 
+                    const removeButton = document.createElement("button");
+                    removeButton.textContent = "Remove";
                     removeButton.style.position = "absolute";
                     removeButton.style.top = "0";
                     removeButton.style.right = "0";
@@ -365,137 +404,136 @@
                     removeButton.style.border = "none";
                     removeButton.style.cursor = "pointer";
                     removeButton.onclick = () => removeImage(index);
-    
                     imgContainer.appendChild(img);
                     imgContainer.appendChild(removeButton);
                     imagePreviewContainer.appendChild(imgContainer);
                 };
-    
                 reader.readAsDataURL(file);
             });
         }
-    
-        function removeImage(index) {
-            filesArray.splice(index, 1); // Remove the file from the array
-    
-            // Re-render the remaining images after removing the selected one
-            const imagePreviewContainer = document.getElementById("imagePreview");
-            imagePreviewContainer.innerHTML = "";
-    
-            filesArray.forEach((file, newIndex) => {
-                const reader = new FileReader();
-    
-                reader.onload = (e) => {
-                    const imgContainer = document.createElement("div");
-                    imgContainer.style.display = "inline-block";
-                    imgContainer.style.position = "relative";
-                    imgContainer.style.marginRight = "10px";
-    
-                    const img = document.createElement("img");
-                    img.src = e.target.result;
-                    img.style.width = "100px";
-                    img.style.cursor = "pointer";
-                    img.onclick = () => openCropper(e.target.result, img, newIndex);
-    
-                    // Recreate the remove button for each image
-                    const removeButton = document.createElement("button");
-                    removeButton.innerText = "X";
-                    removeButton.style.position = "absolute";
-                    removeButton.style.top = "0";
-                    removeButton.style.right = "0";
-                    removeButton.style.backgroundColor = "red";
-                    removeButton.style.color = "white";
-                    removeButton.style.border = "none";
-                    removeButton.style.cursor = "pointer";
-                    removeButton.onclick = () => removeImage(newIndex);
-    
-                    imgContainer.appendChild(img);
-                    imgContainer.appendChild(removeButton);
-                    imagePreviewContainer.appendChild(imgContainer);
-                };
-    
-                reader.readAsDataURL(file);
-            });
-    
-            // Close the crop modal if it's open
-            const cropModal = document.getElementById("cropModal");
-            if (cropModal.style.display === "block") {
-                cropModal.style.display = "none";
-            }
-    
-            // Destroy cropper instance if it exists
-            if (cropper) {
-                cropper.destroy();
-                cropper = null;
-            }
-    
-            // Update the input with the new files array after removal
-            updateInputWithFiles();
-        }
-    
         function openCropper(imageSrc, imgElement, index) {
             const cropModal = document.getElementById("cropModal");
             const croppingImage = document.getElementById("croppingImage");
-    
+            currentFileIndex = index;
             currentImgElement = imgElement;
-            croppedFileIndex = index; // Store index of file being cropped
-            currentFile = filesArray[croppedFileIndex];
+            croppingImage.src = imageSrc; 
+            cropModal.style.display = "block"; 
+            if (cropper) cropper.destroy(); 
 
-            croppingImage.src = imageSrc;
-            cropModal.style.display = "block";
-    
-            if (cropper) {
-                cropper.destroy();
-            }
-    
             cropper = new Cropper(croppingImage, {
                 aspectRatio: 1,
                 viewMode: 2,
             });
         }
-    
         function cropImage() {
             const canvas = cropper.getCroppedCanvas();
-    
+
             canvas.toBlob((blob) => {
-                const croppedFile = new File([blob], currentFile.name, { type: 'image/png' });
-    
-                filesArray[croppedFileIndex] = croppedFile; // Replace the original file with the cropped one
-    
-                // Now, reassign all files (including cropped) to the input field
-                const dataTransfer = new DataTransfer();
-    
-                filesArray.forEach((file) => {
-                    dataTransfer.items.add(file); // Add all files (cropped and uncropped)
-                });
-    
-                const fileInput = document.getElementById('images');
-                fileInput.files = dataTransfer.files; // Update the file input with all files
-    
-                // Update the preview with cropped image
+                const croppedFile = new File([blob], filesArray[currentFileIndex].name, { type: 'image/png' });
+                filesArray[currentFileIndex] = croppedFile;
                 currentImgElement.src = URL.createObjectURL(croppedFile);
-    
-                // Close the crop modal
                 document.getElementById("cropModal").style.display = "none";
-    
-                // Destroy the cropper to clean up
                 cropper.destroy();
                 cropper = null;
             }, 'image/png');
         }
-    
-        function updateInputWithFiles() {
-            const fileInput = document.getElementById('image');
-            const dataTransfer = new DataTransfer();
-    
-            filesArray.forEach((file) => {
-                dataTransfer.items.add(file);
-            });
-    
-            fileInput.files = dataTransfer.files; // Update input with all files (cropped and uncropped)
+        function validateForm() {
+        const productTitleInput = document.getElementById("product_name");
+        const productDescriptionInput = document.querySelector("textarea[name='productDescription']");
+        const priceInput = document.getElementById("price");
+        const stockInput = document.getElementById("stock");
+        const categoryInput = document.getElementById("category");
+        const productTitleError = document.getElementById("productTitleError");
+        const productDescriptionError = document.getElementById("productDescriptionError");
+        const priceError = document.getElementById("priceError");
+        const stockError = document.getElementById("stockError");
+        const categoryError = document.getElementById("categoryError");
+        let isValid = true;
+        productTitleError.textContent = "";
+        productDescriptionError.textContent = "";
+        priceError.textContent = "";
+        stockError.textContent = "";
+        categoryError.textContent = "";
+        if (productTitleInput.value.trim() === "") {
+            productTitleError.textContent = "Product title is required.";
+            isValid = false;
+        } else if (productTitleInput.value.length < 3) {
+            productTitleError.textContent = "Product title must be at least 3 characters long.";
+            isValid = false;
         }
+        if (productDescriptionInput.value.trim() === "") {
+            productDescriptionError.textContent = "Product description is required.";
+            isValid = false;
+        } else if (productDescriptionInput.value.length < 10) {
+            productDescriptionError.textContent = "Product description must be at least 10 characters long.";
+            isValid = false;
+        }
+        if (priceInput.value.trim() === "") {
+            priceError.textContent = "Price is required.";
+            isValid = false;
+        } else if (isNaN(priceInput.value) || priceInput.value <= 0) {
+            priceError.textContent = "Please enter a valid price.";
+            isValid = false;
+        }
+        if (stockInput.value.trim() === "") {
+            stockError.textContent = "Stock is required.";
+            isValid = false;
+        } else if (isNaN(stockInput.value) || stockInput.value < 0) {
+            stockError.textContent = "Stock must be a non-negative number.";
+            isValid = false;
+        }
+        if (categoryInput.value === "") {
+            categoryError.textContent = "Please select a category.";
+            isValid = false;
+        }
+        return isValid;
+    }
+    async function submitForm(event) {
+        event.preventDefault(); 
+
+        if (!validateForm()) {
+            return;
+        }
+        const form = event.target;
+        const formData = new FormData(form);
+        try {
+            const response = await fetch(form.action, {
+                method: 'POST',
+                body: formData
+            });
+            const result = await response.json();
+            if (result.success) {
+                Swal.fire({
+                    icon: 'success',
+                    title: 'Product Added',
+                    text: result.message,
+                    confirmButtonText: 'OK'
+                }).then(() => {
+                    form.reset();
+                    document.getElementById("imagePreview").innerHTML = "";
+                    window.location.href = "/admin/products";
+                });
+            } else {
+                Swal.fire({
+                    icon: 'error',
+                    title: 'Error',
+                    text: result.message,
+                    confirmButtonText: 'Try Again'
+                });
+            }
+        } catch (error) {
+            Swal.fire({
+                icon: 'error',
+                title: 'Oops...',
+                text: 'Something went wrong!',
+                confirmButtonText: 'Try Again'
+            });
+            console.error(error);
+        }
+    }
+
     </script>
-    
+
 </body>
 
 

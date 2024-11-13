@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>PFUME - Account Login</title>
+    <title>PFUME - Admin Login</title>
     <style>
         body {
             font-family: Arial, sans-serif;
@@ -42,7 +42,7 @@
             font-size: 24px;
             margin-bottom: 10px;
         }
-        .error-message {
+        #error-message {
             color: red;
             margin-bottom: 20px;
         }
@@ -103,11 +103,15 @@
 </head>
 <body>
     <div class="page-wrapper">
-        <div class="logo" aria-label="PFUME logo">🔒 PFUME</div>
+        <div class="logo" aria-label="PFUME logo">
+            <div  class="logo" aria-label="PFUME logo">
+                <img style="width: 200px; height: 80px;" src="/user/assets/images/logo/logo.png" alt="logo">
+            </div>
+        </div>
         <div class="container">
             <h1>Admin Login</h1>
             <% if (typeof errorMessage !== 'undefined') { %>
-              <div class="error-message"><%= errorMessage %></div>
+              <div id="error-message"><%= errorMessage %></div>
           <% } %>
             <form method="post" >
                 <label for="email">Email address</label>
@@ -122,5 +126,16 @@
             
         </div>
     </div>
+    <script>
+        document.addEventListener('DOMContentLoaded', function(){
+            const errorMessage = document.getElementById('error-message')
+            if(errorMessage){
+                setTimeout(() => {
+                    errorMessage.style.display ='none'
+                },5000)
+            }
+        })
+
+    </script>
 </body>
 </html>

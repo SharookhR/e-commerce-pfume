@@ -4,13 +4,13 @@ const User = require('../Model/UserModel')
 
 const preventAdminLogin = async (req, res, next) => {
    
-    const token = req.cookies.accessToken
+    const token = req.cookies.refreshToken
     if (token) {
         console.log('Access token found');
         try {
             try {
                 
-                const decoded = jwt.verify(token, process.env.ACCESS_TOKEN_SECRET)
+                const decoded = jwt.verify(token, process.env.REFRESH_TOKEN_SECRET)
              
           
                 if (decoded) {

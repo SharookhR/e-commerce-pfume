@@ -1,0 +1,50 @@
+<tbody>
+                                            <% cartItems.forEach(item=> { %>
+
+                                                <tr class="cart-item" data-id="<%= item.product._id %>"
+                                                    data-is-published="<%= item.product.isPublished %>">
+                                                    <td class="image product-thumbnail">
+                                                        <img src="/uploads/<%= item.product.images[0] %>" alt="#">
+                                                    </td>
+                                                    <td class="product-des product-name">
+                                                        <h5 class="product-name">
+                                                            <a href="shop-product-right.html">
+                                                                <%= item.product.title %>
+                                                            </a>
+                                                        </h5>
+                                                    </td>
+                                                    <td class="price" data-title="Price">
+                                                        <span>
+                                                            <%= item.price %>
+                                                        </span>
+                                                    </td>
+                                                    <td class="text-center" data-title="Stock">
+                                                        <div class="pro-qty-2" style="display: flex;">
+                                                            <button style="border: none; background-color: white;" class="qty-down"
+                                                                data-id="<%= item.product._id %>"><i
+                                                                    class="fa fa-minus"></i></button>
+                                                            <input
+                                                                style="width: 20px; text-align: center; padding-left: 0;"
+                                                                type="text" value="<%= item.quantity %>"
+                                                                data-id="<%= item.product._id %>">
+                                                            <button style="border: none; background-color: white;" class="qty-up" data-id="<%= item.product._id %>"><i
+                                                                    class="fa fa-plus"></i></button>
+                                                        </div>
+                                                    </td>
+                                                    <td class="cart__price text-right" data-id="<%= item.product._id %>"
+                                                        data-title="Cart">
+                                                        <span>
+                                                            <%= item.price * item.quantity %>
+                                                        </span>
+                                                    </td>
+                                                    <td class="action" data-title="Remove"><a href="#"
+                                                            onclick="removeFromCart('<%= item.product._id %>')"
+                                                            class="text-muted"><i class="fi-rs-trash"></i></a></td>
+                                                </tr>
+
+                                                <% }) %>
+
+                                                    <tr>
+
+                                                    </tr>
+                                        </tbody>
