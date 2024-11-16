@@ -414,7 +414,12 @@
                                         </div>
                                         <a href="#"> (1 customer review)</a>
                                     </div>
+                                    <% if(!productDetail.isDiscounted ){ %>
                                     <h3>₹<%= productDetail.price %></h3>
+                                    <% } else { %>
+                                         <h4 style="text-decoration: line-through; color: grey;" class="old-price">₹<%= productDetail.price %></h4>
+                                         <h3>₹<%= productDetail.offerPrice %></h3>
+                                        <% } %>
                                     <strong>Description:</strong>
                                     <h5><%=productDetail.description %></h5>
                                     <!-- <div class="product-details-peragraph">

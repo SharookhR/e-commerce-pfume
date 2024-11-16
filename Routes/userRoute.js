@@ -15,8 +15,10 @@ router.route('/updatedetails').post(userController.updateUserDetails)
 router.route('/updatepassword').post(userController.updateUserPassword)
 router.route('/orderdetail/:id').get(userController.renderOrderDetail)
 router.route('/cancelorder/:id').delete(userController.cancelOrder)
-
 router.route('/cancelproduct/:orderId/:itemId').post(userController.cancelProduct);
+router.route('/returnorder/:id').post(userController.returnOrder)
+router.route('/returnorderitem/:orderId/:itemId').patch(userController.returnOrderItem);
+
 
 //Address
 router.route('/manageaddress').get(userController.renderAddress)

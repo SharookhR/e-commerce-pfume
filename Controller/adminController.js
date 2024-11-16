@@ -444,19 +444,15 @@ const changeStatus = async (req, res) => {
         const orderId = req.params.id;
         const { status } = req.body;
 
-        // Fetch the order and populate products in items
         const order = await Order.findById(orderId).populate('items.product');
 
         if (!order) {
             return res.json({ success: false, message: "Order not found" });
         }
 
-        // Check if order is already "Cancelled" or "Delivered" to prevent further changes
         if (order.status === 'Cancelled' || order.status === 'Delivered') {
             return res.json({ success: false, message: `Cannot change status, order is already ${order.status}.` });
         }
-
-        // Update stock if the new status is "Cancelled"
         if (status === 'Cancelled') {
             for (const item of order.items) {
                 const product = item.product;
@@ -468,7 +464,6 @@ const changeStatus = async (req, res) => {
             }
         }
 
-        // Update the order status
         order.status = status;
         await order.save();
 
@@ -605,6 +600,52 @@ const addOffer = async(req, res)=>{
     }
 }
 
+const listOffer = async(req, res)=>{
+    try {
+        
+        const offerId = req.params.id
+        console.log(offerId);
+        
+        await Offer.findByIdAndUpdate({_id:offerId}, {$set:{isListed:true}})
+        const products = await Product.find({offerId})
+        console.log(products);
+
+        for(let product of products){
+            product.isDiscounted=true
+            await product.save()
+        }
+        return res.status(200).json({success:true, message:"Offer is now listed."})
+
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
+const unlistOffer = async(req, res)=>{
+    try {
+   
+        
+        const offerId = req.params.id
+        
+        
+        await Offer.findByIdAndUpdate({_id:offerId}, {$set:{isListed:false}})
+        const products = await Product.find({offerId})
+        console.log(products);
+        
+        for(let product of products){
+            product.isDiscounted=false
+            await product.save()
+        }
+        return res.status(200).json({success:true, message:"Offer is now unlisted."})
+        
+    } catch (error) {
+        console.log(error);
+        
+    }
+}
+
+
 const renderCoupon = async(req, res)=>{
     try {
         const coupons = await Coupon.find({}).sort({createdAt:-1})
@@ -671,6 +712,60 @@ const deleteCoupon = async (req, res)=>{
 }
 
 
+
+const renderSalesReport = async (req, res) => {
+    try {
+        const page = parseInt(req.query.page) || 1;
+        const limit = 10;
+        const skip = (page - 1) * limit;
+        const startDate = req.query.startDate ? new Date(req.query.startDate) : null;
+        const endDate = req.query.endDate ? new Date(req.query.endDate) : null;
+        const filterType = req.query.filterType || 'all';
+        const filter = { status: "Delivered" };
+        if (startDate && endDate) {
+            filter.orderDate = {
+                $gte: startDate,
+                $lte: endDate
+            };
+        }
+        const currentDate = new Date();
+        if (filterType === 'daily') {
+            filter.orderDate = {
+                $gte: new Date(currentDate.setHours(0, 0, 0, 0)),
+                $lt: new Date(currentDate.setHours(23, 59, 59, 999))
+            };
+        } else if (filterType === 'weekly') {
+            const startOfWeek = new Date(currentDate.setDate(currentDate.getDate() - currentDate.getDay()));
+            filter.orderDate = { $gte: startOfWeek };
+        } else if (filterType === 'monthly') {
+            const startOfMonth = new Date(currentDate.getFullYear(), currentDate.getMonth(), 1);
+            filter.orderDate = { $gte: startOfMonth };
+        } else if (filterType === 'yearly') {
+            const startOfYear = new Date(currentDate.getFullYear(), 0, 1);
+            filter.orderDate = { $gte: startOfYear };
+        }
+        const totalOrderCount = await Order.countDocuments(filter);
+        const totalPages = Math.ceil(totalOrderCount / limit);
+        const orders = await Order.find(filter)
+            .skip(skip)
+            .limit(limit);
+        res.render('salesreport', {
+            orders,
+            totalPages,
+            currentPage: page,
+            filterType,
+            startDate: req.query.startDate || '',
+            endDate: req.query.endDate || '',
+            noOrders: orders.length === 0
+        });
+    } catch (error) {
+        console.log(error);
+        res.status(500).json({ message: 'Internal Server Error' });
+    }
+};
+
+
+
 const logout = async (req, res) => {
     try {
       res.clearCookie("accessToken");
@@ -714,10 +809,13 @@ module.exports = {
     renderOffer,
     renderAddOffer,
     addOffer,
+    listOffer,
+    unlistOffer,
     renderCoupon,
     renderAddCoupon,
     addCoupon,
     deleteCoupon,
+    renderSalesReport,
     logout
 
 };

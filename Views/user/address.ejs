@@ -441,9 +441,10 @@
                                                 <i class="fa fa-edit"></i> Edit Address
                                             </a>
                                         
-                                            <a href="#" class="text-danger ms-auto" data-bs-toggle="modal" data-bs-target="#deleteModal" data-id="<%= address._id %>">
+                                            <a href="#" class="text-danger ms-auto" data-id="<%= address._id %>">
                                                 <i class="fa fa-trash"></i> Delete Address
                                             </a>
+                                            
                                         </div>
                                         
                                         
@@ -465,39 +466,46 @@
                             <form id="address-form">
                                 <input type="hidden" id="address-id" value="">
                                 <div class="single-input-item">
-                                    <label for="street" class="required">Name</label>
+                                    <label for="name" class="required">Name</label>
                                     <input type="text" name="name" id="name" placeholder="Enter name" />
+                                    <span id="name-error" class="error-message" style="color: red;"></span>
                                 </div>
                                 <div class="single-input-item">
-                                    <label for="street" class="required"> Address</label>
+                                    <label for="address" class="required">Address</label>
                                     <input type="text" name="address" id="address" placeholder="Enter address" />
+                                    <span id="address-error" class="error-message" style="color: red;"></span>
                                 </div>
                                 <div class="single-input-item">
                                     <label for="city" class="required">City</label>
                                     <input type="text" name="city" id="city" placeholder="Enter city" />
+                                    <span id="city-error" class="error-message" style="color: red;"></span>
                                 </div>
                                 <div class="single-input-item">
                                     <label for="state" class="required">State</label>
                                     <input type="text" name="state" id="state" placeholder="Enter state" />
+                                    <span id="state-error" class="error-message" style="color: red;"></span>
                                 </div>
                                 <div class="single-input-item">
                                     <label for="zip" class="required">Zip Code</label>
                                     <input type="text" name="pincode" id="zip" placeholder="Enter zip code" />
+                                    <span id="zip-error" class="error-message" style="color: red;"></span>
                                 </div>
                                 <div class="single-input-item">
-                                    <label for="name" class="required">Country</label>
-                                    <input type="text" id="country" name="country" placeholder="Enter country" />
+                                    <label for="country" class="required">Country</label>
+                                    <input type="text" name="country" id="country" placeholder="Enter country" />
+                                    <span id="country-error" class="error-message" style="color: red;"></span>
                                 </div>
                                 <div class="single-input-item">
-                                    <label for="street" class="required">Mobile no</label>
+                                    <label for="phone" class="required">Mobile No</label>
                                     <input type="text" name="phone" id="phone" placeholder="Enter phone number" />
+                                    <span id="phone-error" class="error-message" style="color: red;"></span>
                                 </div>
                                 <div class="single-input-item">
-                                    <button type="submit" id="save-address" class="check-btn sqr-btn">Save
-                                        Address</button>
+                                    <button type="submit" id="save-address" class="check-btn sqr-btn">Save Address</button>
                                 </div>
                             </form>
                         </div>
+                        
                     </div>
                 </div>
 
@@ -505,23 +513,7 @@
 
             </div>
         </div>
-        <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
-            <div class="modal-dialog">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="deleteModalLabel">Confirm Deletion</h5>
-                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                    </div>
-                    <div class="modal-body">
-                        Are you sure you want to delete this address?
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
-                        <a id="confirmDelete" href="#" class="btn btn-danger">Delete</a>
-                    </div>
-                </div>
-            </div>
-        </div>
+        
         <footer class="footer-area section-padding-1 border-top-3">
             <div class="container-fluid">
                 <div class="footer-top pt-100 pb-60">
@@ -661,12 +653,11 @@
         document.getElementById('zip').value = addressData.pincode || '';
         document.getElementById('country').value = addressData.country || '';
         document.getElementById('phone').value = addressData.phone || '';
-    });
+    }); 
 });
 
 document.getElementById('save-address').addEventListener('click', function (event) {
     event.preventDefault();
-
 
     const addressId = document.getElementById('address-id').value;
     const name = document.getElementById('name').value.trim();
@@ -677,34 +668,38 @@ document.getElementById('save-address').addEventListener('click', function (even
     const country = document.getElementById('country').value.trim();
     const phone = document.getElementById('phone').value.trim();
 
- 
-    function showError(message) {
-        Swal.fire({
-            title: 'Validation Error!',
-            text: message,
-            icon: 'warning',
-            confirmButtonText: 'OK'
-        });
+    function showError(inputId, message) {
+        const errorSpan = document.getElementById(`${inputId}-error`);
+        if (errorSpan) errorSpan.textContent = message;
     }
 
+    document.querySelectorAll('.error-message').forEach(span => span.textContent = '');
 
-    if (!name) return showError("Name is required.");
-    if (!address) return showError("Address is required.");
-    if (!city) return showError("City is required.");
-    if (!state) return showError("State is required.");
-    if (!pincode) return showError("Zip code is required.");
-    if (isNaN(pincode) || pincode.length < 5 || pincode.length > 10) 
-        return showError("Zip code should be a number between 5 to 10 digits.");
-    if (!country) return showError("Country is required.");
-    if (!phone) return showError("Phone number is required.");
-    if (isNaN(phone) || phone.length < 10 || phone.length > 15) 
-        return showError("Phone number should be a numeric value between 10 to 15 digits.");
+    if (!name) return showError('name', "Name is required.");
+    if (!address) return showError('address', "Address is required.");
+    if (!city) return showError('city', "City is required.");
+    if (!state) return showError('state', "State is required.");
+    if (!pincode) {
+        showError('zip', "Zip code is required.");
+        return;
+    }
+    if (isNaN(pincode) || pincode.length < 5 || pincode.length > 10) {
+        showError('zip', "Zip code should be a number between 5 to 10 digits.");
+        return;
+    }
+    if (!country) return showError('country', "Country is required.");
+    if (!phone) {
+        showError('phone', "Phone number is required.");
+        return;
+    }
+    if (isNaN(phone) || phone.length < 10 || phone.length > 15) {
+        showError('phone', "Phone number should be a numeric value between 10 to 15 digits.");
+        return;
+    }
 
-  
     const addressData = { name, address, city, state, pincode, country, phone };
     const url = addressId ? `/user/editaddress/${addressId}` : '/user/addaddress';
     const method = addressId ? 'PUT' : 'POST';
-
 
     fetch(url, {
         method: method,
@@ -744,53 +739,72 @@ document.getElementById('save-address').addEventListener('click', function (even
     });
 });
 
-var deleteModal = document.getElementById('deleteModal');
-deleteModal.addEventListener('show.bs.modal', function (event) {
-    var button = event.relatedTarget;
-    var addressId = button.getAttribute('data-id');
-    console.log("Address ID to delete:", addressId);
-
-    var confirmDelete = deleteModal.querySelector('#confirmDelete');
-    
-    confirmDelete.onclick = function () {
-        fetch(`/user/deleteaddress/${addressId}`, {
-            method: 'DELETE',
-            headers: {
-                'Content-Type': 'application/json'
-            }
-        })
-        .then(response => response.json())
-        .then(data => {
-            if (data.success) {
-                Swal.fire({
-                    title: 'Deleted!',
-                    text: "Address deleted successfully.",
-                    icon: 'success',
-                    confirmButtonText: 'OK'
-                }).then(() => {
-                    location.reload(); 
-                });
-            } else {
-                Swal.fire({
-                    title: 'Error!',
-                    text: data.message || "Failed to delete address.",
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            }
-        })
-        .catch(error => {
-            console.error("Error deleting address:", error);
-            Swal.fire({
-                title: 'Error!',
-                text: "An error occurred while deleting the address.",
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-        });
-    };
+document.querySelectorAll('.single-input-item').forEach(item => {
+    const input = item.querySelector('input');
+    if (input) {
+        const errorSpan = document.createElement('span');
+        errorSpan.id = `${input.id}-error`;
+        errorSpan.className = 'error-message';
+        errorSpan.style.color = 'red';
+        item.appendChild(errorSpan);
+    }
 });
 
+document.querySelectorAll('.text-danger').forEach(function(button) {
+    button.addEventListener('click', function (event) {
+        event.preventDefault(); 
+        
+        var addressId = button.getAttribute('data-id');
+        console.log("Address ID to delete:", addressId);
+
+        Swal.fire({
+            title: 'Are you sure?',
+            text: "You won't be able to revert this!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Yes, delete it!',
+            cancelButtonText: 'Cancel',
+        }).then((result) => {
+            if (result.isConfirmed) {
+                fetch(`/user/deleteaddress/${addressId}`, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                .then(response => response.json())
+                .then(data => {
+                    if (data.success) {
+                        Swal.fire({
+                            title: 'Deleted!',
+                            text: "Address deleted successfully.",
+                            icon: 'success',
+                            confirmButtonText: 'OK'
+                        }).then(() => {
+                            location.reload(); 
+                        });
+                    } else {
+                        Swal.fire({
+                            title: 'Error!',
+                            text: data.message || "Failed to delete address.",
+                            icon: 'error',
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                })
+                .catch(error => {
+                    console.error("Error deleting address:", error);
+                    Swal.fire({
+                        title: 'Error!',
+                        text: "An error occurred while deleting the address.",
+                        icon: 'error',
+                        confirmButtonText: 'OK'
+                    });
+                });
+            }
+        });
+    });
+});
 
 
     </script>

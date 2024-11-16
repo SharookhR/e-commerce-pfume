@@ -2,7 +2,7 @@
 <html lang="en">
 
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-error-404.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:33 GMT -->
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-orders-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
 <head>
     <meta charset="utf-8">
     <title>PFUME - Admin</title>
@@ -71,7 +71,7 @@
                         <span class="text">Coupons</span>
                     </a>
                 </li>
-                <li class="menu-item ">
+                <li class="menu-item active">
                     <a class="menu-link" href="/admin/salesreport"> <i class="icon material-icons md-insert_chart_outlined"></i>
                         <span class="text">Sales Report</span>
                     </a>
@@ -175,21 +175,145 @@
             </div>
         </header>
         <section class="content-main">
-            <div class="row mt-60">
-                <div class="col-sm-12">
-                    <div class="w-50 mx-auto text-center">
-                        <img src="/admin/assets/imgs/theme/404.png" width="350" alt="Page Not Found">
-                        <h3 class="mt-40 mb-15">Oops! Page not found</h3>
-                        <p>It's looking like you may have taken a wrong turn. Don't worry... it happens to the best of us. Here's a little tip that might help you get back on track.</p>
-                        <a href="/admin/dashboard" class="btn btn-primary mt-4"><i class="material-icons md-keyboard_return"></i> Back to main</a>
-                    </div>
+            <div class="content-header">
+                <div>
+                    <h2 class="content-title card-title">Order List </h2>
+                    <p>Lorem ipsum dolor sit amet.</p>
+                </div>
+                <div>
+                    <input type="text" placeholder="Search order ID" class="form-control bg-white">
                 </div>
             </div>
+            <div class="card mb-4">
+                <header class="card-header">
+                    <div class="row gx-3">
+                        <form method="GET" action="/admin/salesreport" class="row mb-3">
+                            <div class="col-lg-2 col-6 col-md-3">
+                                <label for="startDate">Start Date</label>
+                                <input type="date" name="startDate" class="form-control" value="<%= startDate %>">
+                            </div>
+                            <div class="col-lg-2 col-6 col-md-3">
+                                <label for="endDate">End Date</label>
+                                <input type="date" name="endDate" class="form-control" value="<%= endDate %>">
+                            </div>
+                            <div class="col-lg-2 col-6 col-md-3">
+                                <label for="filterType">Filter</label>
+                                <select name="filterType" class="form-select">
+                                    <option value="all" <%= filterType === 'all' ? 'selected' : '' %>>All</option>
+                                    <option value="daily" <%= filterType === 'daily' ? 'selected' : '' %>>Daily</option>
+                                    <option value="weekly" <%= filterType === 'weekly' ? 'selected' : '' %>>Weekly</option>
+                                    <option value="monthly" <%= filterType === 'monthly' ? 'selected' : '' %>>Monthly</option>
+                                    <option value="yearly" <%= filterType === 'yearly' ? 'selected' : '' %>>Yearly</option>
+                                </select>
+                            </div>
+                            <div class="col-lg-2 col-6 col-md-3 d-flex align-items-end">
+                                <button type="submit"  class="btn-sm btn-light">Apply Filters</button>
+                            </div>
+                        </form>
+                    </div>
+                </header> <!-- card-header end// -->
+                <div class="card-body">
+                    <div class="table-responsive">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>#ID</th>
+                                    <th scope="col">Name</th>
+                                    <th scope="col">Date</th>
+                                    <th scope="col">Discount</th>
+                                    <th scope="col">Total</th>
+                                    <!-- <th scope="col">Status</th> -->
+                                    <th scope="col"> Method </th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <%if(orders){%>
+                                    <% orders.forEach((order)=>{ %>
+                                <tr>
+                                    
+                                    <td>#<%= order._id %></td>
+                                    <td><b><%=order.billingDetails.name%></b></td>
+                                    <td><%= order.orderDate.toLocaleDateString() %></td>
+
+                                    <td><%= order.discount %></td>
+                                    <td>₹<%= order.totalPrice %></td>
+                                    <td><%= order.paymentMethod %></td>
+
+
+                                    <!-- <td><span class="badge rounded-pill alert-<%=
+                                        order.status ==='Pending'? 'warning' : 
+                                        order.status === 'Shipped' || order.status === 'Delivered' ? 'success':
+                                        order.status === 'Cancelled'? 'danger': 'primary'
+                                        %> text -<%=
+                                        order.status ==='Pending'? 'warning' : 
+                                        order.status === 'Shipped' || order.status === 'Delivered' ? 'success':
+                                        order.status === 'Cancelled'? 'danger': 'primary'
+                                        %>">
+                                        <%=order.status%>    
+                                    </span></td> -->
+
+                                    <!-- <td class="text-end"> -->
+
+                                        <!-- <a href="/admin/orderdetail/<%=order._id%>" class="btn btn-md rounded font-sm">Detail</a> -->
+                                        <!-- <div class="dropdown">
+                                            <a href="#" data-bs-toggle="dropdown" class="btn btn-light rounded btn-sm font-sm"> <i class="material-icons md-more_horiz"></i> </a>
+                                            <div class="dropdown-menu">
+                                                <a class="dropdown-item" href="/admin/orderdetail">View detail</a>
+                                                <a class="dropdown-item" href="#">Edit info</a>
+                                                <a class="dropdown-item text-danger" href="#">Delete</a>
+                                            </div>
+                                        </div> dropdown //end -->
+                                    <!-- </td> -->
+                                </tr>
+                                <%})%>
+                                <%}else {%>
+                                    <td>no orders to show</td>
+                                    <%}%>
+                            </tbody>
+                        </table>
+                    </div> <!-- table-responsive //end -->
+                </div> <!-- card-body end// -->
+            </div> <!-- card end// -->
+            <div class="pagination-area mt-15 mb-50">
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-start">
+                        <% for(let i = 1; i <= totalPages; i++) { %>
+                            <li class="page-item <%= i === currentPage ? 'active' : '' %> ">
+                                <a class="page-link  "
+                                    href="/admin/salesreport?page=<%= i %>">
+                                    <%= i %>
+                                </a>
+                            </li>
+                        <% } %>
+                
+                        <% if (currentPage < totalPages) { %>
+                            <li class="page-item">
+                                <a href="/admin/salesreport?page=<%= currentPage + 1 %>">
+                                    <i class="page-link material-icons md-chevron_right"></i>
+                                </a>
+                            </li>
+                        <% } %>
+                    </ul>
+                    <!-- <ul class="pagination justify-content-start">
+                        <li class="page-item active"><a class="page-link" href="#">01</a></li>
+                        <li class="page-item"><a class="page-link" href="#">02</a></li>
+                        <li class="page-item"><a class="page-link" href="#">03</a></li>
+                        <li class="page-item"><a class="page-link dot" href="#">...</a></li>
+                        <li class="page-item"><a class="page-link" href="#">16</a></li>
+                        <li class="page-item"><a class="page-link" href="#"><i class="material-icons md-chevron_right"></i></a></li>
+                    </ul> -->
+                </nav>
+            </div>
+            <div>
+                <button onclick="downloadPdf('Sales Report')" class="btn btn-light ">Download PDF</button>
+                <button onclick="downloadExcel()" class="btn btn-light ">Download Excel</button>
+            </div>
+            <br>
         </section> <!-- content-main end// -->
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">
-                    <script>
+                    <script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
                     document.write(new Date().getFullYear())
                     </script> ©, Evara - HTML Ecommerce Template .
                 </div>
@@ -208,8 +332,63 @@
     <script src="/admin/assets/js/vendors/jquery.fullscreen.min.js"></script>
     <!-- Main Script -->
     <script src="/admin/assets/js/main.js" type="text/javascript"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+
+    <script>
+        const downloadPdf = async () => {
+    try {
+        console.log("downloading PDF");
+
+        const { jsPDF } = window.jspdf;
+
+        if (!jsPDF) {
+            console.error('jsPDF not loaded');
+            return;
+        }
+
+        const doc = new jsPDF();
+        const table = document.querySelector('table');
+        const headingText = document.getElementById('heading')?.innerText || 'Sales Report';
+
+        doc.setFontSize(22);
+        doc.text(headingText, 20, 20);
+
+        doc.autoTable({
+            html: table,
+            startY: 30,
+            styles: { fontSize: 10 },
+        });
+
+        doc.save('sales-report.pdf');
+    } catch (error) {
+        console.error('Error downloading PDF:', error);
+    }
+};
+
+        const downloadExcel = () => {
+            try {
+                console.log("downloading excel");
+
+                const table = document.querySelector('table');
+
+                const ws = XLSX.utils.table_to_sheet(table);
+
+                const wb = XLSX.utils.book_new();
+
+                XLSX.utils.book_append_sheet(wb, ws, 'Sales Report');
+
+                XLSX.writeFile(wb, 'sales-report.xlsx');
+            } catch (error) {
+                console.error("Error downloading Excel:", error);
+            }
+        };
+    </script>
 </body>
 
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-error-404.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:34 GMT -->
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-orders-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:22 GMT -->
 </html>

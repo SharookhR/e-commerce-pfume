@@ -32,6 +32,92 @@
     <link rel="stylesheet" href="/user/assets/css/plugins/jquery-ui.css">
     <link rel="stylesheet" href="/user/assets/css/plugins/select2.min.css">
     <link rel="stylesheet" href="/user/assets/css/style.css">
+    <style>
+        body {
+            background-color: #f8f9fa;
+        }
+        .container {
+            max-width: 1000px;
+        }
+        .nav-pills .nav-link {
+            color: #333;
+            background-color: #fff;
+            border: 1px solid #dee2e6;
+            border-radius: 0;
+            padding: 15px 20px;
+            transition: all 0.3s ease;
+        }
+        .nav-pills .nav-link:hover {
+            background-color: #f1f3f5;
+        }
+        .nav-pills .nav-link.active {
+            color: #fff;
+            background-color: #333;
+            border-color: #333;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .card {
+            border: none;
+            box-shadow: 0 0 20px rgba(0,0,0,0.1);
+            border-radius: 15px;
+            overflow: hidden;
+        }
+        .card-header {
+            background-color: gray;
+            color: #fff;
+            padding: 20px;
+            border-bottom: none;
+        }
+        .btn-primary {
+            background-color: #333;
+            border-color: #333;
+            padding: 10px 20px;
+            transition: all 0.3s ease;
+        }
+        .btn-primary:hover {
+            background-color: #555;
+            border-color: #555;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        .balance-card {
+            background: grey;
+            height:  250px;
+            color: #fff;
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+        }
+        .payment-method-card {
+            transition: all 0.3s ease;
+        }
+        .payment-method-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 20px rgba(0,0,0,0.1);
+        }
+        .form-control:focus {
+            border-color: #333;
+            box-shadow: 0 0 0 0.2rem rgba(51, 51, 51, 0.25);
+        }
+        .transaction-history {
+            max-height: 300px;
+            overflow-y: auto;
+        }
+        .transaction-item {
+            border-left: 4px solid #333;
+            padding-left: 15px;
+            margin-bottom: 15px;
+        }
+        .transaction-amount {
+            font-weight: bold;
+        }
+        .transaction-amount.positive {
+            color: #28a745;
+        }
+        .transaction-amount.negative {
+            color: #dc3545;
+        }
+    </style>
     <!-- <style>
         .address-container {
     display: flex;
@@ -403,6 +489,8 @@
                             
                             <a href="#account-info" class="active" data-bs-toggle="tab"> Account Details</a>
                             <a href="#orders" data-bs-toggle="tab"> Orders</a>
+                            <a href="#wallet" data-bs-toggle="tab"> Wallet</a>
+
                             <a href="/user/manageaddress" > address</a>
                             <a href="/user/logout"> Logout</a>
                         </div>
@@ -440,13 +528,17 @@
                                                     <td>#<%= order._id %></td>
                                                     <td><%= order.orderDate.toLocaleDateString() %></td>
                                                     <td id="order-status-<%= order._id %>"><%= order.status %></td>
-                                                    <td><%= order.totalPrice %></td>
+                                                    <td><%= order.totalPrice.toFixed(2) %></td>
                                                     <td>
                                                         <a href="/user/orderdetail/<%= order._id %>" class="check-btn sqr-btn ">View Order</a>
                                                         <br>
-                                                        <% if(order.status!='Delivered' && order.status!="Cancelled"){ %>
+                                                        <% if(order.status=='Pending' && order.status=="Shipped"){ %>
                                                         <a href="#" class="cancel-btn sqr-btn" id="cancel-btn-<%= order._id %>" data-order-id="<%= order._id %>">Cancel Order</a>
                                                         <% } %>
+                                                        <% if(order.status == 'Delivered') { %>
+                                                            <a href="#" class="return-btn sqr-btn" id="return-btn-<%= order._id %>" data-order-id="<%= order._id %>">Return Order</a>
+                                                        <% } %>
+                                                        
                                                     </td>
                                                     
                                                 </tr>
@@ -458,38 +550,94 @@
                             </div>
                             <!-- Single Tab Content End -->
                             <!-- Single Tab Content Start -->
-                            <!-- <div class="tab-pane fade" id="download" role="tabpanel">
+                            <div class="tab-pane fade" id="wallet" role="tabpanel">
                                 <div class="myaccount-content">
                                     <div class="myaccount-table table-responsive text-center">
-                                        <table class="table table-bordered">
-                                            <thead class="thead-light">
-                                                <tr>
-                                                    <th>Product</th>
-                                                    <th>Date</th>
-                                                    <th>Expire</th>
-                                                    <th>Download</th>
-                                                </tr>
-                                            </thead>
-                                            <tbody>
-                                                <tr>
-                                                    <td>Haven - Free Real Estate PSD Template</td>
-                                                    <td>Aug 22, 2023</td>
-                                                    <td>Yes</td>
-                                                    <td><a href="#" class="check-btn sqr-btn "><i class="fa fa-cloud-download"></i> Download File</a></td>
-                                                </tr>
-                                                <tr>
-                                                    <td>HasTech - Profolio Business Template</td>
-                                                    <td>Sep 12, 2023</td>
-                                                    <td>Never</td>
-                                                    <td><a href="#" class="check-btn sqr-btn "><i class="fa fa-cloud-download"></i> Download File</a></td>
-                                                </tr>
-                                            </tbody>
-                                        </table>
+                                        <div class="card">
+                                            <div class="card-header">
+                                                <h2 class="card-title mb-0"><i class="fas fa-wallet me-2"></i>My Wallet</h2>
+                                            </div>
+                                            <div class="card-body">
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-4">
+                                                        <div class="balance-card">
+                                                            <h3 class="mb-3">Available Balance</h3>
+                                                            <h2 class="display-4 mb-3">₹<%= wallet.balance  %></h2>
+                                                            <!-- <button class="btn btn-light"><i class="fas fa-plus me-2"></i>Add Money</button> -->
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-4">
+                                                        <h3 class="mb-3"></i>Transaction History</h3>
+                                                        <div class="transaction-history">
+                                                            <% wallet.transactions.forEach((transaction)=>{ %>
+                                                            <div class="transaction-item">
+                                                                <p class="mb-1"><strong><%= transaction.description %></strong></p>
+                                                                <p class="mb-1 text-muted">
+                                                                    <%= transaction.date.toLocaleString('en-US', { 
+                                                                        year: 'numeric', 
+                                                                        month: 'short', 
+                                                                        day: '2-digit', 
+                                                                        hour: '2-digit', 
+                                                                        minute: '2-digit', 
+                                                                        second: '2-digit', 
+                                                                        hour12: true // Set to true for 12-hour format or false for 24-hour format
+                                                                    }) %>
+                                                                </p>
+                                                                                                                                <p class="transaction-amount positive">₹<%= transaction.amount %></p>
+                                                            </div>
+                                                            <% } ) %>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <!-- <h3 class="mb-4"><i class="fas fa-credit-card me-2"></i>Payment Methods</h3>
+                                                <div class="row">
+                                                    <div class="col-md-6 mb-4">
+                                                        <div class="card payment-method-card">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title"><i class="fab fa-cc-visa me-2"></i>•••• •••• •••• 4242</h5>
+                                                                <p class="card-text text-muted">Expires 12/24</p>
+                                                                <button class="btn btn-outline-danger btn-sm mt-2"><i class="fas fa-trash me-2"></i>Remove</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-md-6 mb-4">
+                                                        <div class="card payment-method-card">
+                                                            <div class="card-body">
+                                                                <h5 class="card-title"><i class="fab fa-cc-mastercard me-2"></i>•••• •••• •••• 5678</h5>
+                                                                <p class="card-text text-muted">Expires 09/25</p>
+                                                                <button class="btn btn-outline-danger btn-sm mt-2"><i class="fas fa-trash me-2"></i>Remove</button>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                </div> -->
+                                                <!-- <div class="card mt-4">
+                                                    <div class="card-body">
+                                                        <h5 class="card-title mb-4"><i class="fas fa-plus-circle me-2"></i>Add New Card</h5>
+                                                        <form>
+                                                            <div class="mb-3">
+                                                                <label for="cardNumber" class="form-label">Card Number</label>
+                                                                <input type="text" class="form-control" id="cardNumber" placeholder="Enter card number">
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="col-md-6 mb-3">
+                                                                    <label for="expiryDate" class="form-label">Expiry Date</label>
+                                                                    <input type="text" class="form-control" id="expiryDate" placeholder="MM/YY">
+                                                                </div>
+                                                                <div class="col-md-6 mb-3">
+                                                                    <label for="cvv" class="form-label">CVV</label>
+                                                                    <input type="text" class="form-control" id="cvv" placeholder="123">
+                                                                </div>
+                                                            </div>
+                                                            <button type="submit" class="btn btn-primary"><i class="fas fa-plus me-2"></i>Add Card</button>
+                                                        </form>
+                                                    </div>
+                                                </div> -->
+                                            </div>
+                                        </div>
                                     </div>
                                 </div>
-                            </div> -->
-                            <!-- Single Tab Content End -->
-                            <!-- Single Tab Content Start -->
+                            </div> 
+                    
                             <!-- <div class="tab-pane fade" id="address-edit" role="tabpanel">
                                 <div class="myaccount-content container">
                                     <div class="row">
@@ -548,7 +696,6 @@
                                 <div class="myaccount-content">
                                     <div class="account-details-form">
                                         <form id="profileForm">
-                                            
                                             <div class="row">
                                                 <div class="col-lg-6">
                                                     <div class="single-input-item">
@@ -571,35 +718,38 @@
                                                     </div>
                                                 </div>
                                                 <div class="single-input-item">
-                                                    <button type="button" id="save-changes" onclick="updateProfile()" disabled class="check-btn sqr-btn ">Save Changes</button>
+                                                    <button type="button" id="save-changes" onclick="updateProfile()" disabled class="check-btn sqr-btn">Save Changes</button>
                                                 </div>
                                             </div>
                                         </form>
-                                        <form >
+                                        <form>
                                             <div class="single-input-item">
                                                 <label for="email" class="required">Email <span>*</span></label>
-                                                <input type="email" id="email" disabled name="email" value="<%= user.email%>" />
+                                                <input type="email" id="email" disabled name="email" value="<%= user.email %>" />
                                             </div>
                                         </form>
-                                        <% if(!user.googleId){ %>
+                                        <% if (!user.googleId) { %>
                                         <form id="passwordForm">
                                             <fieldset>
                                                 <legend>Password change</legend>
                                                 <div class="single-input-item">
-                                                    <label for="current-pwd" class="required">Current password (leave blank to leave unchanged)</label>
+                                                    <label for="current-pwd" class="required">Current password</label>
                                                     <input type="password" id="current-pwd" name="currentPassword" />
+                                                    <span style="color: red;" id="current-pwd-error" class="error-message"></span>
                                                 </div>
                                                 <div class="row">
                                                     <div class="col-lg-12">
                                                         <div class="single-input-item">
-                                                            <label for="new-pwd" class="required">New password (leave blank to leave unchanged)</label>
+                                                            <label for="new-pwd" class="required">New password</label>
                                                             <input type="password" id="new-pwd" name="newPassword" />
+                                                            <span style="color: red;" id="new-pwd-error" class="error-message"></span>
                                                         </div>
                                                     </div>
                                                     <div class="col-lg-12">
                                                         <div class="single-input-item">
                                                             <label for="confirm-pwd" class="required">Confirm new password</label>
                                                             <input type="password" id="confirm-pwd" name="confirmPassword" />
+                                                            <span style="color: red;" id="confirm-pwd-error" class="error-message"></span>
                                                         </div>
                                                     </div>
                                                 </div>
@@ -611,7 +761,7 @@
                                         <% } %>
                                     </div>
                                 </div>
-                            </div> <!-- Single Tab Content End -->
+                            </div><!-- Single Tab Content End -->
                         </div>
                     </div>
                 </div>
@@ -737,98 +887,103 @@
     <script src="/user/assets/js/main.js"></script>
 
     <script>
-        function enableEditForm(fieldId, saveButtonId){
-            const field = document.getElementById(fieldId)
+        function enableEditForm(fieldId, saveButtonId) {
+            const field = document.getElementById(fieldId);
             field.readOnly = false;
             field.classList.add('editable');
-            field.focus()
-            document.getElementById(saveButtonId).disabled= false;
+            field.focus();
+            document.getElementById(saveButtonId).disabled = false;
         }
-        let originalName = document.getElementById('name').value;
-        let originalEmail = document.getElementById('email').value;
+    
+        function validateProfileForm() {
+            let valid = true;
+            const name = document.getElementById('name');
+            const phone = document.getElementById('phone');
+            const nameError = document.getElementById('name-error');
+            const phoneError = document.getElementById('phone-error');
+    
+            nameError.textContent = '';
+            phoneError.textContent = '';
+    
+            if (!name.value.trim()) {
+                nameError.textContent = 'Name is required.';
+                valid = false;
+            }
+            if (!/^[\d]{10}$/.test(phone.value.trim())) {
+                phoneError.textContent = 'Phone must be a 10-digit number.';
+                valid = false;
+            }
+            return valid;
+        }
     
         function updateProfile() {
-            const name = document.getElementById('name').value;
-            const email = document.getElementById('email').value;
-            if (name === originalName && email === originalEmail) {
-                Swal.fire({
-                    title: 'No Changes Detected',
-                    text: "You have not made any changes to your profile.",
-                    icon: 'info',
-                    confirmButtonText: 'OK'
-                });
-                return;
-            }
-            fetch('/user/updatedetails', {
-                method: 'POST',
-                headers: {
-                    'Content-Type': 'application/json'
-                },
-                body: JSON.stringify({ name, email })
-            })
-            .then(response => response.json())
-            .then(data => {
-                if (data.success) {
-                    originalName = name;
-                    originalEmail = email;
-    
-                    Swal.fire({
-                        title: 'Success!',
-                        text: "Profile updated successfully",
-                        icon: 'success',
-                        confirmButtonText: 'OK'
-                    });
-                } else {
-                    Swal.fire({
-                        title: 'Error!',
-                        text: "Failed to update profile: " + data.message,
-                        icon: 'error',
-                        confirmButtonText: 'OK'
-                    });
-                }
-            })
-            .catch(error => {
-                console.error("Error updating profile:", error);
-                Swal.fire({
-                    title: 'Error!',
-                    text: "An error occurred while updating the profile",
-                    icon: 'error',
-                    confirmButtonText: 'OK'
-                });
-            });
-        }
+    if (!validateProfileForm()) return;
 
+    const name = document.getElementById('name').value.trim();
+    const phone = document.getElementById('phone').value.trim();
+
+    fetch('/user/updatedetails', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ name, phone })
+    })
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                Swal.fire({
+                    title: 'Profile Updated!',
+                    text: 'Your profile details have been successfully updated.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+
+                document.getElementById('save-changes').disabled = true;
+            } else {
+                document.getElementById('name-error').textContent = data.message || 'Error updating profile.';
+            }
+        })
+        .catch(error => {
+            console.error('Error updating profile:', error);
+            document.getElementById('name-error').textContent = 'An unexpected error occurred.';
+        });
+}
+
+        function validatePasswordForm() {
+            let valid = true;
+            const currentPwd = document.getElementById('current-pwd');
+            const newPwd = document.getElementById('new-pwd');
+            const confirmPwd = document.getElementById('confirm-pwd');
+            const currentPwdError = document.getElementById('current-pwd-error');
+            const newPwdError = document.getElementById('new-pwd-error');
+            const confirmPwdError = document.getElementById('confirm-pwd-error');
+    
+            currentPwdError.textContent = '';
+            newPwdError.textContent = '';
+            confirmPwdError.textContent = '';
+    
+            if (!currentPwd.value.trim()) {
+                currentPwdError.textContent = 'Current password is required.';
+                valid = false;
+            }
+            if (newPwd.value.trim().length < 6) {
+                newPwdError.textContent = 'New password must be at least 6 characters.';
+                valid = false;
+            }
+            if (newPwd.value.trim() !== confirmPwd.value.trim()) {
+                confirmPwdError.textContent = 'Passwords do not match.';
+                valid = false;
+            }
+            return valid;
+        }
+    
         function changePassword() {
-    const currentPassword = document.getElementById('current-pwd').value;
-    const newPassword = document.getElementById('new-pwd').value;
-    const confirmPassword = document.getElementById('confirm-pwd').value;
-    if (!currentPassword || !newPassword || !confirmPassword) {
-        Swal.fire({
-            title: 'Error!',
-            text: "All password fields are required.",
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
-        return; 
-    }
-    if (newPassword !== confirmPassword) {
-        Swal.fire({
-            title: 'Error!',
-            text: "New passwords do not match.",
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
-        return;
-    }
-    if (newPassword === currentPassword) {
-        Swal.fire({
-            title: 'Error!',
-            text: "The new password must be different from the current password.",
-            icon: 'error',
-            confirmButtonText: 'OK'
-        });
-        return;
-    }
+    if (!validatePasswordForm()) return;
+
+    const currentPassword = document.getElementById('current-pwd').value.trim();
+    const newPassword = document.getElementById('new-pwd').value.trim();
+
     fetch('/user/updatepassword', {
         method: 'POST',
         headers: {
@@ -836,96 +991,28 @@
         },
         body: JSON.stringify({ currentPassword, newPassword })
     })
-    .then(response => response.json())
-    .then(data => {
-        if (data.success) {
-            Swal.fire({
-                title: 'Success!',
-                text: "Password changed successfully.",
-                icon: 'success',
-                confirmButtonText: 'OK'
-            });
-        } else {
-            Swal.fire({
-                title: 'Error!',
-                text: "Failed to change password: " + data.message,
-                icon: 'error',
-                confirmButtonText: 'OK'
-            });
-        }
-    })
-    .catch(error => {
-        console.error("Error changing password:", error);
-        Swal.fire({
-            title: 'Error!',
-            text: "An error occurred while changing the password.",
-            icon: 'error',
-            confirmButtonText: 'OK'
+        .then(response => response.json())
+        .then(data => {
+            if (data.success) {
+                document.getElementById('passwordForm').reset();
+
+                Swal.fire({
+                    title: 'Password Changed!',
+                    text: 'Your password has been successfully updated.',
+                    icon: 'success',
+                    confirmButtonText: 'OK'
+                });
+            } else {
+                document.getElementById('current-pwd-error').textContent = data.message || 'Error changing password.';
+            }
+        })
+        .catch(error => {
+            console.error('Error changing password:', error);
+            document.getElementById('current-pwd-error').textContent = 'An unexpected error occurred.';
         });
-    });
 }
 
-document.addEventListener('DOMContentLoaded', function() {
-    document.querySelectorAll('.cancel-btn').forEach(button => {
-        button.addEventListener('click', function(event) {
-            event.preventDefault();
-
-            const orderId = this.getAttribute('data-order-id');
-
-            Swal.fire({
-                title: 'Are you sure you want to cancel this order?',
-                text: "You won't be able to revert this!",
-                icon: 'warning',
-                showCancelButton: true,
-                confirmButtonColor: '#3085d6',
-                cancelButtonColor: '#d33',
-                confirmButtonText: 'Yes, cancel it!'
-            }).then((result) => {
-                if (result.isConfirmed) {
-                    // Send AJAX request to cancel the order
-                    fetch(`/user/cancelorder/${orderId}`, {
-                        method: 'DELETE', // Use the appropriate method (POST or DELETE)
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    })
-                    .then(response => response.json())
-                    .then(data => {
-                        if (data.success) {
-                            Swal.fire(
-                                'Cancelled!',
-                                'The order has been cancelled.',
-                                'success'
-                            );
-
-                            // Update the order status in the UI
-                            const orderStatusElement = document.querySelector(`#order-status-${orderId}`);
-                            if (orderStatusElement) {
-                                orderStatusElement.textContent = 'Cancelled';
-                            }
-
-                            // Hide or disable the cancel button
-                            const cancelButton = document.querySelector(`#cancel-btn-${orderId}`);
-                            if (cancelButton) {
-                                cancelButton.style.display = 'none'; // Hide the button
-                                // Alternatively, disable the button instead of hiding it
-                                // cancelButton.disabled = true;
-                            }
-                        } else {
-                            Swal.fire('Error!', data.message || 'Failed to cancel order.', 'error');
-                        }
-                    })
-                    .catch(error => {
-                        console.error('Error cancelling order:', error);
-                        Swal.fire('Error!', 'An error occurred while cancelling the order.', 'error');
-                    });
-                }
-            });
-        });
-    });
-});
-
-    </script>
+   </script>
 
 </body>
 

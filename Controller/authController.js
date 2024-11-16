@@ -311,11 +311,7 @@ const verifyUser = async (req, res) => {
 const renderForgotPasswordOtp = async (req, res) => {
     try {
         const token = req.cookies.token;
-        
-
-        // if (!token) {
-        //     return res.redirect('/auth/forgotPassword')
-        // }
+    
         const decode = jwt.verify(token, process.env.JWT_OTP_TOKEN)
         const checkingUser = decode.userId
         const user = await resetUser.findById(checkingUser)
@@ -403,11 +399,6 @@ const forgotPasswordResendOtp = async (req, res) => {
     try {
         const userId = req.userId
         const user = await resetUser.findById(userId)
-
-        // if(!user){
-        //    return res.render("forgotPasswordOtp", {errorMessage:"No user found"})
-        // }
-
 
         const currentTime = Date.now();
         const lastOtpTime = currentTime - user.lastOtp;

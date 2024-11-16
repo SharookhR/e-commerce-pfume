@@ -47,7 +47,7 @@ const productSchema = new mongoose.Schema({
       },
       offerId: {
         type: mongoose.Schema.Types.ObjectId,
-        ref: "offer",
+        ref: "Offer",
         default: null,
       },
       isDiscounted: {

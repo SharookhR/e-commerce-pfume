@@ -389,7 +389,7 @@
                         <p>If you have a coupon code, please apply it below.</p>
                         <form id="coupon-form" onsubmit="applyCoupon(event)">
                             <input type="text" id="coupon-code" name="couponCode" placeholder="Coupon code" required>
-                            <input type="submit" value="Apply Coupon">
+                            <input type="submit" id="sub-btn" value="Apply Coupon">
                         </form>
                         <button class="btn border" id="remove-coupon" onclick="removeCoupon()" style="display:none;">Remove Coupon</button> 
                         <p id="coupon-message"></p>
@@ -514,61 +514,68 @@
             </div>
         </div>
         <!-- Add Address Modal -->
-<div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
-    <div class="modal-dialog">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title" id="addAddressModalLabel">Add New Address</h5>
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+        <div class="modal fade" id="addAddressModal" tabindex="-1" aria-labelledby="addAddressModalLabel" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="addAddressModalLabel">Add New Address</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <form id="addAddressForm">
+                            <input type="hidden" id="address-id" value="">
+                            
+                            <div class="single-input-item">
+                                <label for="addressName" class="required">Name</label>
+                                <input type="text" name="name" class="form-control" id="addressName" placeholder="Enter name" >
+                                <span style="color: red;" class="error-message" id="name-error"></span>
+                            </div>
+                            
+                            <div class="single-input-item">
+                                <label for="addressDetails" class="required">Address</label>
+                                <input type="text" name="address" class="form-control" id="addressDetails" placeholder="Enter address" >
+                                <span style="color: red;" class="error-message" id="address-error"></span>
+                            </div>
+                            
+                            <div class="single-input-item">
+                                <label for="city" class="required">City</label>
+                                <input type="text" name="city" class="form-control" id="city" placeholder="Enter city" >
+                                <span style="color: red;" class="error-message" id="city-error"></span>
+                            </div>
+                            
+                            <div class="single-input-item">
+                                <label for="state" class="required">State</label>
+                                <input type="text" name="state" class="form-control" id="state" placeholder="Enter state" >
+                                <span style="color: red;" class="error-message" id="state-error"></span>
+                            </div>
+                            
+                            <div class="single-input-item">
+                                <label for="zip" class="required">Zip Code</label>
+                                <input type="text" name="pincode" class="form-control" id="zip" placeholder="Enter zip code" >
+                                <span style="color: red;" class="error-message" id="zip-error"></span>
+                            </div>
+                            
+                            <div class="single-input-item">
+                                <label for="country" class="required">Country</label>
+                                <input type="text" name="country" class="form-control" id="country" placeholder="Enter country" >
+                                <span style="color: red;" class="error-message" id="country-error"></span>
+                            </div>
+                            
+                            <div class="single-input-item">
+                                <label for="phone" class="required">Mobile No</label>
+                                <input type="text" name="phone" class="form-control" id="phone" placeholder="Enter phone number" >
+                                <span style="color: red;" class="error-message" id="phone-error"></span>
+                            </div>
+                            
+                            <div class="single-input-item">
+                                <button type="submit" class="check-btn sqr-btn">Save Address</button>
+                            </div>
+                        </form>
+                    </div>
+                </div>
             </div>
-            <div class="modal-body">
-                <form id="addAddressForm">
-                    <input type="hidden" id="address-id" value="">
-                    
-                    <div class="single-input-item">
-                        <label for="addressName" class="required">Name</label>
-                        <input type="text" name="name" class="form-control" id="addressName" placeholder="Enter name" required>
-                    </div>
-                    
-                    <div class="single-input-item">
-                        <label for="addressDetails" class="required">Address</label>
-                        <input type="text" name="address" class="form-control" id="addressDetails" placeholder="Enter address" required>
-                    </div>
-                    
-                    <div class="single-input-item">
-                        <label for="city" class="required">City</label>
-                        <input type="text" name="city" class="form-control" id="city" placeholder="Enter city" required>
-                    </div>
-                    
-                    <div class="single-input-item">
-                        <label for="state" class="required">State</label>
-                        <input type="text" name="state" class="form-control" id="state" placeholder="Enter state" required>
-                    </div>
-                    
-                    <div class="single-input-item">
-                        <label for="zip" class="required">Zip Code</label>
-                        <input type="text" name="pincode" class="form-control" id="zip" placeholder="Enter zip code" required>
-                    </div>
-                    
-                    <div class="single-input-item">
-                        <label for="country" class="required">Country</label>
-                        <input type="text" name="country" class="form-control" id="country" placeholder="Enter country" required>
-                    </div>
-                    
-                    <div class="single-input-item">
-                        <label for="phone" class="required">Mobile No</label>
-                        <input type="text" name="phone" class="form-control" id="phone" placeholder="Enter phone number" required>
-                    </div>
-                    
-                    <div class="single-input-item">
-                        <button type="submit" class="check-btn sqr-btn">Save Address</button>
-                    </div>
-                </form>
-            </div>
-            
         </div>
-    </div>
-</div>
+        
 
         <!-- checkout end -->
         <footer class="footer-area section-padding-1 border-top-3">
@@ -690,6 +697,7 @@
 
     <!-- Main JS -->
     <script src="assets/js/main.js"></script>
+    
     <script>
        
        const addressData = JSON.parse(document.getElementById("addressContainer").dataset.address);
@@ -714,13 +722,16 @@
             }
         }
     
+        function resetValidationMessages() {
+            const errorMessages = document.querySelectorAll('.error-message');
+            errorMessages.forEach(message => message.textContent = '');
+        }
+    
         document.getElementById("addAddressForm").addEventListener("submit", async function (event) {
             event.preventDefault();
+            resetValidationMessages();
     
-            const addressId = document.getElementById("address-id").value;
-            const url = addressId ? `/user/editaddress/${addressId}` : "/user/addaddress";
-            const method = addressId ? 'PUT' : 'POST';
-    
+            let isValid = true;
             const addressData = {
                 name: document.getElementById("addressName").value.trim(),
                 address: document.getElementById("addressDetails").value.trim(),
@@ -730,6 +741,43 @@
                 country: document.getElementById("country").value.trim(),
                 phone: document.getElementById("phone").value.trim()
             };
+    
+            if (!addressData.name) {
+                document.getElementById("name-error").textContent = "Name is required";
+                isValid = false;
+            }
+            if (!addressData.address) {
+                document.getElementById("address-error").textContent = "Address is required";
+                isValid = false;
+            }
+            if (!addressData.city) {
+                document.getElementById("city-error").textContent = "City is required";
+                isValid = false;
+            }
+            if (!addressData.state) {
+                document.getElementById("state-error").textContent = "State is required";
+                isValid = false;
+            }
+            if (!addressData.pincode) {
+                document.getElementById("zip-error").textContent = "Zip Code is required";
+                isValid = false;
+            }
+            if (!addressData.country) {
+                document.getElementById("country-error").textContent = "Country is required";
+                isValid = false;
+            }
+            if (!addressData.phone) {
+                document.getElementById("phone-error").textContent = "Phone number is required";
+                isValid = false;
+            }
+    
+            if (!isValid) {
+                return; 
+            }
+    
+            const addressId = document.getElementById("address-id").value;
+            const url = addressId ? `/user/editaddress/${addressId}` : "/user/addaddress";
+            const method = addressId ? 'PUT' : 'POST';
     
             try {
                 const response = await fetch(url, {
@@ -793,10 +841,10 @@
             }
 
             const options = {
-                key: "rzp_test_huxdedC8WMgMZj",
+                key: "<%=process.env.RAZORPAY_KEY_ID %>",
                 amount: order.amount,
                 currency: "INR",
-                name: "Your Ecommerce",
+                name: "PFume",
                 description: "Purchase Order",
                 order_id: order.razorpayOrderId,
                 handler: async function (response) {
@@ -822,9 +870,9 @@
                     }
                 },
                 prefill: {
-                    name: "Customer Name",
-                    email: "customer@example.com",
-                    contact: "9000090000",
+                    name: "<%= user.name %>",
+                    email: "<%= user.email %>",
+                    contact: "<%= user.phone %>",
                 },
                 theme: { color: "#3399cc" }
             };
@@ -835,6 +883,7 @@
             Swal.fire("Error!", "Unable to initiate Razorpay. Please try again.", "error");
         }
     } else {
+        
         try {
             const response = await fetch("/user/checkout", {
                 method: "POST",
@@ -879,9 +928,28 @@
         let discountedTotalPrice = null;
         let discountAmount=null;
 
-        async function applyCoupon(event) {
+        let isCouponApplied = false;
+
+async function applyCoupon(event) {
     event.preventDefault();
+        if (isCouponApplied) {
+        Swal.fire({
+            icon: 'warning',
+            title: 'Coupon already applied',
+            text: 'You have already applied a coupon.',
+        });
+        return;
+    }
+
     const couponCode = document.getElementById('coupon-code').value;
+    if (!couponCode) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Invalid coupon code',
+            text: 'Please enter a valid coupon code.',
+        });
+        return;
+    }
 
     const response = await fetch('/user/checkout/applycoupon', {
         method: 'POST',
@@ -893,10 +961,13 @@
     const messageElement = document.getElementById('coupon-message');
 
     if (result.success) {
+        isCouponApplied = true;
+
         messageElement.textContent = `Coupon applied successfully: ${result.discount} off`;
         document.getElementById('remove-coupon').style.display = 'inline-block'; 
         document.getElementById('discount-amount').textContent = `₹${result.discount}`;
-    document.getElementById('total-price').textContent = `₹${result.newTotal}`;
+        document.getElementById('total-price').textContent = `₹${result.newTotal}`;
+        document.getElementById('sub-btn').ariaDisabled = true; 
     } else {
         messageElement.textContent = result.message;
         messageElement.classList.add('error');
@@ -904,19 +975,15 @@
 }
 
 function removeCoupon() {
+    isCouponApplied = false; 
     document.getElementById('coupon-code').value = ''; 
     document.getElementById('coupon-message').textContent = 'Coupon removed.';
     document.getElementById('remove-coupon').style.display = 'none'; 
+    document.getElementById('discount-amount').textContent = '₹0';
+    document.getElementById('total-price').textContent = '₹<%= totalPrice %>'; 
+    document.getElementById('sub-btn').ariaDisabled = false; 
 }
 
-// function removeCoupon() {
-//     discountedTotalPrice = null; 
-//     document.getElementById('discount-amount').textContent = '₹0';
-//     document.getElementById('total-price').textContent = '₹<%= totalPrice %>'; e
-//     document.getElementById('coupon-code').value = ''; 
-//     document.getElementById('coupon-message').textContent = 'Coupon removed.';
-//     document.getElementById('remove-coupon').style.display = 'none'; 
-// }
 
 
 

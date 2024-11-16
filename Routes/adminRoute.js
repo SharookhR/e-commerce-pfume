@@ -43,12 +43,17 @@ router.route('/cancelproduct/:orderId/:itemId').post(adminController.cancelProdu
 //Offer
 router.route('/offers').get(adminController.renderOffer)
 router.route('/addoffer').get(adminController.renderAddOffer).post(adminController.addOffer)
+router.route('/listoffer/:id').patch(adminController.listOffer)
+router.route('/unlistoffer/:id').patch(adminController.unlistOffer)
 
 //Coupon
 router.route('/coupons').get(adminController.renderCoupon)
 router.route('/addcoupon').get(adminController.renderAddCoupon).post(adminController.addCoupon)
 router.route('/coupons/deletecoupon/:id').delete(adminController.deleteCoupon)
 
+
+//Sales Report
+router.route('/salesreport').get(adminController.renderSalesReport)
 
 router.route('/logout').get(adminController.logout)
 
