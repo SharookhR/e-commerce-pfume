@@ -13,8 +13,11 @@ const crypto = require('crypto')
 const Coupon = require('../Model/couponModel')
 const Offer = require  ('../Model/offerModel')
 const Wallet = require('../Model/walletModel')
+const {jsPDF} = require('jspdf')
+require('jspdf-autotable')
 const { handleRefund } = require('../utility/handlerefund')
 require('dotenv').config()
+const fs =  require('fs')
 
 const instance = new Razorpay({
   key_id: process.env.RAZORPAY_KEY_ID,
@@ -42,7 +45,6 @@ const renderHome = async (req, res) => {
     const cart = await Cart.findOne({userId})  
     const cartItemNo = cart? cart.items.length: 0
     const products = await Product.find().sort({createdAt:-1}).limit(3)
-    console.log(products);
     
 
     return res.render("home", {cartItemNo, products});
@@ -58,12 +60,8 @@ const renderShop = async (req, res) => {
     const cartItemNo = cart ? cart.items.length : 0;
     const offers = await Offer.find()
     const currentDate = Date.now()
-    for(const offer of offers){
-      console.log(currentDate, offer.endDate);
-      
-    if(currentDate > offer.endDate){
-      console.log(offer);
-      
+    for(const offer of offers){  
+    if(currentDate > offer.endDate){      
       await Offer.findByIdAndUpdate({_id:offer._id},{$set:{isListed:false}})
       await Product.updateMany({offerId:offer._id}, {$set:{isDiscounted: false}})
     }
@@ -171,10 +169,13 @@ const renderMyAccount =  async (req, res)=>{
   try {
     const userId=req.userId
     const user = await User.findById(userId)
-    const orders= await Order.find({userId})
+    const orders= await Order.find({userId}).sort({createdAt:-1})
     const cart = await Cart.findOne({userId})  
     const cartItemNo = cart? cart.items.length: 0
+    
+    
     const wallet = await Wallet.findOne({userId})
+    
     
 
     return res.render('myAccount', {user, orders, cartItemNo, wallet})
@@ -259,6 +260,148 @@ const renderOrderDetail = async(req, res)=>{
     
   }
 }
+
+const retryPayment = async (req, res)=>{
+  try {
+    const orderId  = req.params.id
+
+    const order = await Order.findById(orderId);
+
+    if (!order) {
+        return res.json({ success: false, message: "Order not found" });
+    }
+
+
+    const razorpayOrder = await instance.orders.create({
+        amount: order.totalPrice * 100, 
+        currency: "INR",
+        receipt: `retry_${order._id}`,
+    });
+ 
+    res.json({
+        success: true,
+        key: process.env.RAZORPAY_KEY_ID,
+        amount: razorpayOrder.amount,
+        currency: razorpayOrder.currency,
+        razorpayOrderId: razorpayOrder.id,
+        prefill: {
+            name: order.billingDetails.name,
+            email: order.billingDetails.email,
+            contact: order.billingDetails.phone,
+        },
+    });
+} catch (error) {
+    console.error("Error creating Razorpay order:", error);
+    res.json({ success: false, message: "Failed to create Razorpay order" });
+}
+}
+
+
+const verifyRetryPayment = async (req, res)=>{
+  try {
+    const { razorpayPaymentId, razorpayOrderId, razorpaySignature } = req.body;
+
+    const hmac = crypto.createHmac("sha256", process.env.RAZORPAY_KEY_SECRET);
+    hmac.update(razorpayOrderId + "|" + razorpayPaymentId);
+    const generatedSignature = hmac.digest("hex");
+
+    if (generatedSignature !== razorpaySignature) {
+        return res.status(400).json({ success: false, message: "Invalid payment signature" });
+    }
+
+    await Order.updateOne(
+        { _id: req.params.id },
+        { $set: { paymentStatus: "Paid" } }
+    );
+
+    res.json({ success: true, message: "Payment verified successfully" });
+} catch (error) {
+    console.error("Verification Error:", error);
+    res.status(500).json({ success: false, message: "Payment verification failed" });
+}
+}
+
+
+const generateOrderInvoice = async (req, res) => {
+  try {
+      const orderId = req.params.id;
+
+      const order = await Order.findById(orderId).populate('items.product'); 
+      if (!order) {
+          return res.status(404).send('Order not found');
+      }
+
+      const doc = new jsPDF();
+
+      const logoPath = '/Users/sharookhrahaman/Ecommerce-Project/public/user/assets/images/logo/logo.PNG';
+      if (fs.existsSync(logoPath)) {
+          const logo = fs.readFileSync(logoPath, { encoding: 'base64' });
+          doc.addImage(logo, 'PNG', 10, 10, 30, 15); 
+      } else {
+          console.warn('Logo file not found.');
+      }
+
+      doc.setFontSize(16);
+      doc.text('Teapoy Private Limited', 50, 20);
+      doc.setFontSize(14);
+      doc.setTextColor(100);
+      doc.text('INVOICE', 160, 20);
+
+      doc.setFontSize(10);
+      doc.setTextColor(0);
+      doc.text('Kakkanad', 50, 30);
+      doc.text('Kochi, Kerala, 217231', 50, 35);
+      doc.text('Phone: +8343927433', 50, 40);
+      doc.text('Email: support@teapoy.com', 50, 45);
+
+      const orderDate = new Date(order.orderDate).toLocaleDateString();
+      doc.setFontSize(10);
+      doc.text(`Order Number: ${order._id}`, 10, 60);
+      doc.text(`Date: ${orderDate}`, 10, 65);
+
+      doc.text(`Customer: ${order.billingDetails.name}`, 10, 75);
+      doc.text(`Address: ${order.billingDetails.address}`, 10, 80);
+
+      const tableData = order.items.map((item) => [
+          item.product.title,
+          item.quantity,
+          `Rs ${item.product.price}`,
+          `Rs ${(item.quantity * item.product.price).toFixed(2)}`,
+      ]);
+      doc.autoTable({
+          head: [['Product', 'Quantity', 'Price', 'Total']],
+          body: tableData,
+          startY: 90,
+          styles: {
+              fontSize: 10,
+              halign: 'left',
+          },
+          headStyles: {
+              fillColor: [100, 150, 255],
+              textColor: 255,
+          },
+      });
+
+      const finalY = doc.lastAutoTable.finalY + 10;
+      doc.setFontSize(12);
+      doc.text(`Subtotal: Rs ${(order.totalPrice + order.discount).toFixed(2)}`, 140, finalY);
+      doc.text(`Discount: Rs ${order.discount.toFixed(2)}`, 140, finalY + 5);
+      doc.text(`Total: Rs ${order.totalPrice.toFixed(2)}`, 140, finalY + 10);
+
+      doc.setFontSize(10);
+      doc.setTextColor(100);
+      doc.text('Thanks for purchasing from PFume', 10, finalY + 30);
+
+      res.setHeader('Content-Type', 'application/pdf');
+      res.setHeader('Content-Disposition', `attachment; filename=invoice-${order._id}.pdf`);
+
+      const pdfBuffer = doc.output('arraybuffer');
+      res.send(Buffer.from(pdfBuffer));
+  } catch (error) {
+      console.error('Error generating invoice:', error);
+      res.status(500).send('Error generating invoice');
+  }
+};
 
 
 
@@ -450,7 +593,9 @@ const renderCart = async (req, res)=>{
     const cartItem = cart ? cart.items : []
     const cartItemNo = cart? cart.items.length: 0
 
-    await updateCartPrices(cart)
+    if(cartItem.length>0){
+      await updateCartPrices(cart)
+    }
     res.render('cart', {cartItem, cart, cartItemNo})
   } catch (error) {
     console.log(error);
@@ -464,23 +609,30 @@ const updateCartPrices = async (cart) => {
   try {
     for (let item of cart.items) {
       const product = await Product.findById(item.product);
-      
-      const offerId = product.offerId
-     
-      
-      const offer = await Offer.findById(offerId)
-     
-      
-      if(new Date() > offer.endDate || !offer.isListed){
-        return
+
+      if (!product) {
+        console.error(`Product not found for ID: ${item.product}`);
+        continue;
       }
-      const offerPrice = product.offerPrice || product.price;      
-      item.price = offerPrice;
+
+      let updatedPrice = product.price;
+
+      if (product.offerId && product.isDiscounted) {
+        const offer = await Offer.findById(product.offerId);
+
+        if (offer && offer.isListed && new Date() <= offer.endDate) {
+          updatedPrice = product.offerPrice || product.price;
+        }
+      }
+
+      item.price = updatedPrice;
     }
+
     cart.totalPrice = cart.items.reduce(
       (total, item) => total + item.price * item.quantity,
       0
     );
+
     await cart.save();
   } catch (error) {
     console.error("Error updating cart prices:", error);
@@ -489,13 +641,15 @@ const updateCartPrices = async (cart) => {
 
 
 
+
 const addToCart = async (req, res) => {
   try {
+     const {quantity=1} = req.body     
       const userId = req.userId;  
       const productId = req.params.id;
 
       const product = await Product.findById(productId).populate('offerId');
-
+      
       if (!product) {
           return res.status(404).json({ success: false, message: 'Product not found' });
       }
@@ -514,35 +668,33 @@ const addToCart = async (req, res) => {
           
       }
       
-
       let cart = await Cart.findOne({ userId });
-
 
       if (cart) {
 
           const itemIndex = cart.items.findIndex(item => item.product.toString() === productId);
 
           if (itemIndex > -1) {
-              const currentQuantity = cart.items[itemIndex].quantity;
-
-            console.log(currentQuantity);
-            
+              const currentQuantity = cart.items[itemIndex].quantity; 
+                        
               if (currentQuantity >= product.stock ) {
                   return res.status(400).json({ success: false, message: 'You already have the maximum available stock of this product in your cart' });
               }
-
               if(currentQuantity == 5)
               {
                 return res.status(400).json({ success: false, message: 'You already have the maximum number of product in your cart' });
-
               }
-              cart.items[itemIndex].quantity += 1;
+              if(quantity + currentQuantity >5){
+                return res.status(400).json({success: false, message:"Select a lesser Quantity"})
+
+              } 
+              cart.items[itemIndex].quantity += quantity;
               cart.items[itemIndex].price = finalPrice;  
           } else {
               cart.items.push({
                   product: productId,
                   price: finalPrice,
-                  quantity: 1
+                  quantity,
               });
           }
       } else {
@@ -551,11 +703,13 @@ const addToCart = async (req, res) => {
               items: [{
                   product: productId,
                   price: finalPrice,
-                  quantity: 1
+                  quantity,
               }],
           });
       }
+      
       cart.totalPrice = cart.items.reduce((total, item) => total + item.price * item.quantity, 0);
+      
       await cart.save();
 
       return res.json({ success: true, message: 'Added to cart successfully' });
@@ -576,13 +730,13 @@ const updateQuantity = async (req, res) => {
   
     
     let userCart = await Cart.findOne({ userId: userId }).populate("items.product");
-   
+    
     if (userCart) {
       const productInCart = userCart.items.find(
         (item) => item.product._id.toString() === productId
       );
   
-
+      
       if (productInCart) {
         const product = await Product.findById(productId);
         if (!product) {
@@ -594,7 +748,13 @@ const updateQuantity = async (req, res) => {
       
 
         if (action === "increment") {
-          if (productInCart.quantity < maxQuantity) {
+          if(productInCart.quantity>=maxQuantity) {
+            return res.json({
+              success: false,
+              message: "Maximum quantity reached for this product",
+            });
+          }
+          else if (productInCart.quantity < 5) {
             productInCart.quantity += 1; 
             productInCart.price = priceToUse; 
             
@@ -611,14 +771,19 @@ const updateQuantity = async (req, res) => {
               price: productInCart.price,
               totalPrice: userCart.totalPrice,
             });
-          } else {
+          }
+           else {
             return res.json({
               success: false,
-              message: "Maximum quantity reached for this product",
+              message: "Maximum quantity reached",
             });
           }
         } else if (action === "decrement") {
+          console.log('1');
+          
           if (productInCart.quantity > 1) {
+            console.log('2');
+            
             productInCart.quantity -= 1; 
             productInCart.price = priceToUse; 
 
@@ -635,6 +800,8 @@ const updateQuantity = async (req, res) => {
               totalPrice: userCart.totalPrice,
             });
           } else {
+            console.log('3');
+            
             return res.json({
               success: false,
               message: "Quantity cannot be less than 1.",
@@ -697,6 +864,33 @@ const removeFromCart = async (req, res) => {
   }
 
 };
+
+const checkStock = async (req, res) => {
+  try {
+      const userId = req.userId; 
+      const cart = await Cart.findOne({ userId }).populate('items.product');
+
+      if (!cart || cart.items.length === 0) {
+          return res.json({ success: false, message: 'Your cart is empty.' });
+      }
+
+      for (const item of cart.items) {
+          if (item.quantity > item.product.stock) {
+              return res.json({
+                  success: false,
+                  message: `The selected quantity for "${item.product.title}" exceeds the available stock (${item.product.stock}).`,
+              });
+          }
+      }
+
+      res.json({ success: true });
+  } catch (error) {
+      console.error('Error checking stock:', error);
+      res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+
 
 const renderCheckout = async (req, res)=>{
   try {
@@ -772,7 +966,6 @@ const applyCoupon = async (req, res) => {
       
       let discount = 0;
           const discountPercentageAmount = (cart.totalPrice * coupon.discount) / 100;
-          console.log(discountPercentageAmount);
           
           discount = Math.min(discountPercentageAmount, coupon.maxDiscountAmount);
       
@@ -811,6 +1004,15 @@ const placeOrder = async (req, res) => {
     
     if (!cart || cart.items.length === 0) {
       return res.status(400).json({ success: false, message: "Cart is empty." });
+    }
+
+    for (let item of cart.items) {
+      if (item.quantity > item.product.stock) {
+        return res.status(400).json({
+          success: false,
+          message: `Insufficient stock for product "${item.product.title}". Only ${item.product.stock} items left.`,
+        });
+      }
     }
       let discount = 0;
       if (couponCode) {
@@ -865,7 +1067,7 @@ const placeOrder = async (req, res) => {
         price: item.product.price,
         quantity: item.quantity
       })),
-      totalPrice:totalAmount,
+      totalPrice,
       discount,
       coupon:couponCode,
       status: "Pending",
@@ -901,7 +1103,7 @@ const placeOrder = async (req, res) => {
 
 const verifyPayment = async (req, res) => {
   try {
-    const { paymentId, orderId, signature, addressId, notes, couponCode } = req.body;
+    const { paymentId, orderId, signature, addressId, notes, couponCode, paymentStatus } = req.body;
     
     const userId = req.userId;
     const cart = await Cart.findOne({ userId }).populate("items.product");
@@ -919,6 +1121,41 @@ const verifyPayment = async (req, res) => {
     const billingDetails = address.addressDetails.find(
       (address) => address._id.toString() === addressId
     );
+
+    if(paymentStatus==='Failed'){
+      const failedOrder = new Order({
+        userId,
+        items: cart.items.map(item => ({
+          product: item.product._id,
+          price: item.product.price,
+          quantity: item.quantity
+        })),
+        totalPrice:totalAmount,
+      discount,
+      coupon:couponCode,
+        status: "Pending",
+        billingDetails,
+        paymentMethod: "Razorpay", 
+        orderDate: new Date(),
+        paymentStatus, 
+        returnReason: "",
+        notes,
+        orderno: orderNo
+      });
+
+      await failedOrder.save()
+
+      for (let item of cart.items) {
+        await Product.findByIdAndUpdate(item.product._id, {
+          $inc: { stock: -item.quantity }
+        });
+      }
+
+     
+      await Cart.deleteOne({ userId });
+
+      return res.status(200).json({message: "Order created with failed Payment", orderId: failedOrder._id})
+    }
 
     const generatedSignature = crypto
       .createHmac("sha256", process.env.RAZORPAY_KEY_SECRET)
@@ -1073,7 +1310,7 @@ const cancelOrder = async (req, res) => {
 
 const cancelProduct = async (req, res) => {
   try {
-    const { orderId, itemId } = req.params;
+    const { orderId, itemId } = req.params;    
     const userId = req.userId;
     const order = await Order.findById(orderId).populate('items.product');
     const coupon = order.coupon ? await Coupon.findOne({ couponCode: order.coupon }) : null;
@@ -1131,6 +1368,7 @@ const returnOrder = async(req, res)=>{
     const userId = req.userId;
     const orderId = req.params.id;
 
+    const wallet = await Wallet.findOne({userId})
     const order = await Order.findById(orderId).populate('items.product');
 
     if (!order || order.status !== 'Delivered') {
@@ -1147,9 +1385,20 @@ const returnOrder = async(req, res)=>{
         await product.save();
         }
     }
-     refundAmount = order.totalPrice
+    refundAmount = order.totalPrice
     order.status = 'Returned';
     await order.save();
+
+    wallet.balance += refundAmount;
+        wallet.transactions.push({
+          type: 'refund',
+          amount: refundAmount,
+          date: Date.now(),
+          description:`Refund for order #${order.id}`,
+          orderId
+        });
+        await wallet.save();
+
 
     return res.status(200).json({
         success: true,
@@ -1168,16 +1417,11 @@ const returnOrderItem = async(req, res)=>{
     const {orderId, itemId} = req.params;
     const userId = req.userId
     const order = await Order.findById(orderId).populate('items.product');
-    console.log(order);
-    console.log(order.status);
-    
-    
     if (!order || order.status !== 'Delivered') {
         return res.status(400).json({ success: false, message: 'Order not eligible for return.' });
     }
 
     const item = order.items.id(itemId)
-    console.log(item);
     item.productStatus = 'Returned'
 
     const product = item.product;
@@ -1229,6 +1473,9 @@ module.exports = {
   updateUserDetails,
   updateUserPassword,
   renderOrderDetail,
+  retryPayment,
+  verifyRetryPayment,
+  generateOrderInvoice,
   renderAddress,
   addAddress,
   editAddress,
@@ -1240,6 +1487,7 @@ module.exports = {
   addToCart,
   updateQuantity,
   removeFromCart,
+  checkStock,
   renderCheckout,
   listCoupon,
   applyCoupon,
@@ -1251,5 +1499,5 @@ module.exports = {
   createOrder,
   returnOrder,
   returnOrderItem,
-  logout,
+  logout
 };

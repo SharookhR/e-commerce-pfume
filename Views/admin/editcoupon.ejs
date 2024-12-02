@@ -2,7 +2,7 @@
 <html lang="en">
 
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-orders-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:21 GMT -->
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->
 <head>
     <meta charset="utf-8">
     <title>PFUME - Admin</title>
@@ -66,12 +66,12 @@
                         <span class="text"> Offers</span>
                     </a>
                 </li>
-                <li class="menu-item ">
+                <li class="menu-item active">
                     <a class="menu-link" href="/admin/coupons"> <i class="icon material-icons md-local_offer"></i>
                         <span class="text">Coupons</span>
                     </a>
                 </li>
-                <li class="menu-item active">
+                <li class="menu-item ">
                     <a class="menu-link" href="/admin/salesreport"> <i class="icon material-icons md-insert_chart_outlined"></i>
                         <span class="text">Sales Report</span>
                     </a>
@@ -168,127 +168,78 @@
                             <a class="dropdown-item" href="#"><i class="material-icons md-receipt"></i>Billing</a>
                             <a class="dropdown-item" href="#"><i class="material-icons md-help_outline"></i>Help center</a>
                             <div class="dropdown-divider"></div>
-                            <a class="dropdown-item text-danger" href="#"><i class="material-icons md-exit_to_app"></i>Logout</a>
+                            <a class="dropdown-item text-danger" href="/admin/logout"><i class="material-icons md-exit_to_app"></i>Logout</a>
                         </div>
                     </li>
                 </ul>
             </div>
         </header>
         <section class="content-main">
-            <div class="content-header">
-                <div>
-                    <h2 class="content-title card-title">Sales Report </h2>
+            <div class="row">
+                <div class="col-9">
+                    <div class="content-header">
+                        <h2 class="content-title">Add Coupon</h2>
+                        <div>
+                            <a href="/admin/coupons" class="btn btn-light rounded font-sm mr-5 text-body hover-up">Back</a>
+                            
+                        </div>
+                    </div>
                 </div>
-                <!-- <div>
-                    <input type="text" placeholder="Search order ID" class="form-control bg-white">
-                </div> -->
+                <div class="col-lg-6">
+                    <div class="card mb-4">
+                        <div class="card-header">
+                            <h4>Basic</h4>
+                        </div>
+                        <div class="card-body">
+                            <form method="post" onsubmit="return validateForm()">
+                                <div class="mb-4">
+                                  <label for="couponCode" class="form-label">Coupon Code</label>
+                                  <input type="text" placeholder="Type here" class="form-control" value="<%= coupon.couponCode %>" name="couponCode" id="couponCode">
+                                  <div id="couponCodeError" class="text-danger"></div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                  <label class="form-label">Full description</label>
+                                  <textarea placeholder="Type here" class="form-control"  name="description" rows="4" id="description"><%= coupon.description %></textarea>
+                                  <div id="descriptionError" class="text-danger"></div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                  <label class="form-label">Discount(%)</label>
+                                  <input type="text" placeholder="Type here" class="form-control" value="<%= coupon.discount %>" name="discount" id="percentage">
+                                  <div id="discountError" class="text-danger"></div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                  <label class="form-label">Minimum Purchase Amount</label>
+                                  <input type="text" placeholder="Type here" class="form-control" value="<%= coupon.minPurchaseAmount %>" name="minPurchaseAmount" id="min_purchase">
+                                  <div id="minPurchaseError" class="text-danger"></div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                  <label class="form-label">Maximum Discount Amount</label>
+                                  <input type="text" placeholder="Type here" class="form-control" value="<%= coupon.maxDiscountAmount %>" name="maxDiscountAmount" id="max_discount">
+                                  <div id="maxDiscountError" class="text-danger"></div>
+                                </div>
+                                
+                                <div class="mb-4">
+                                  <label for="expiry_date" class="form-label">Expiry Date</label>
+                                  <input type="date" class="form-control" name="expiryDate" value="<%= coupon.expiryDate.toISOString().split('T')[0] %>" id="expiry_date">
+                                  <div id="dateError" class="text-danger"></div>
+                                </div>
+                                
+                                <button class="btn btn-md rounded font-sm hover-up" type="submit">Add</button>
+                              </form>
+                        </div>
+                    </div> <!-- card end// -->
+                </div>
+                
             </div>
-            <div class="card mb-4">
-                <header class="card-header">
-                    <div class="row gx-3">
-                        <form id="filterForm" method="GET" action="/admin/salesreport" class="row mb-3">
-                            <div class="col-lg-2 col-6 col-md-3">
-                                <label for="filterType">Filter</label>
-                                <select name="filterType" id="filterType" class="form-select">
-                                    <option value="all" <%= filterType === 'all' ? 'selected' : '' %>>All</option>
-                                    <option value="daily" <%= filterType === 'daily' ? 'selected' : '' %>>Today</option>
-                                    <option value="weekly" <%= filterType === 'weekly' ? 'selected' : '' %>>This Week</option>
-                                    <option value="monthly" <%= filterType === 'monthly' ? 'selected' : '' %>>This Month</option>
-                                    <option value="yearly" <%= filterType === 'yearly' ? 'selected' : '' %>>This Year</option>
-                                    <option value="custom" <%= filterType === 'custom' ? 'selected' : '' %>>Custom</option>
-                                </select>
-                            </div>
-                    
-                            <div class="col-lg-2 col-6 col-md-3" id="customDates" style="display: none;">
-                                <label for="startDate">Start Date</label>
-                                <input type="date" name="startDate" id="startDate" class="form-control" value="<%= startDate %>">
-                            </div>
-                    
-                            <div class="col-lg-2 col-6 col-md-3" id="customDatesEnd" style="display: none;">
-                                <label for="endDate">End Date</label>
-                                <input type="date" name="endDate" id="endDate" class="form-control" value="<%= endDate %>">
-                            </div>
-                    
-                            <div class="col-lg-2 col-6 col-md-3 d-flex align-items-end">
-                                <button type="submit" class="btn-sm btn-light">Apply Filters</button>
-                            </div>
-                        </form>
-                    </div>
-                    
-                </header> <!-- card-header end// -->
-                <div class="card-body">
-                    <div class="table-responsive">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>#ID</th>
-                                    <th scope="col">Name</th>
-                                    <th scope="col">Date</th>
-                                    <th scope="col">Discount</th>
-                                    <th scope="col">Total</th>
-                                    <th scope="col">Method</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                <% if (orders) { %>
-                                    <% orders.forEach((order) => { %>
-                                        <tr>
-                                            <td>#<%= order._id %></td>
-                                            <td><b><%= order.billingDetails.name %></b></td>
-                                            <td><%= order.orderDate.toLocaleDateString() %></td>
-                                            <td><%= order.discount %></td>
-                                            <td>₹<%= order.totalPrice %></td>
-                                            <td><%= order.paymentMethod %></td>
-                                            
-                                        </tr>
-                                    <% }) %>
-                                <% } else { %>
-                                    <tr>
-                                        <td colspan="6">No orders to show</td>
-                                    </tr>
-                                <% } %>
-                            </tbody>
-                        </table>
-                        <p>Total no of Sales: <span data-total-sales-count><%= totalSalesCount %></span></p>
-                        <p>Total Order Amount: ₹<span data-total-order-amount><%= totalOrderAmount.toFixed(2) %></span></p>
-                        <p>Total Discount: ₹<span data-total-discount><%= totalDiscount %></span></p>
-                        
-                    </div>
-                     <!-- table-responsive //end -->
-                </div> <!-- card-body end// -->
-            </div> <!-- card end// -->
-            <div class="pagination-area mt-15 mb-50">
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-start">
-                        <% for (let i = 1; i <= totalPages; i++) { %>
-                            <li class="page-item <%= i === currentPage ? 'active' : '' %>">
-                                <a class="page-link" href="/admin/salesreport?page=<%= i %>&startDate=<%= startDate %>&endDate=<%= endDate %>&filterType=<%= filterType %>">
-                                    <%= i %>
-                                </a>
-                            </li>
-                        <% } %>
-            
-                        <% if (currentPage < totalPages) { %>
-                            <li class="page-item">
-                                <a href="/admin/salesreport?page=<%= currentPage + 1 %>&startDate=<%= startDate %>&endDate=<%= endDate %>&filterType=<%= filterType %>">
-                                    <i class="page-link material-icons md-chevron_right"></i>
-                                </a>
-                            </li>
-                        <% } %>
-                    </ul>
-                </nav>
-            </div>
-            
-            <div>
-                <button onclick="downloadPdf()" class="btn btn-light">Download PDF</button>
-                <button onclick="downloadExcel()" class="btn btn-light">Download Excel</button>
-            </div>
-            <br>
         </section> <!-- content-main end// -->
         <footer class="main-footer font-xs">
             <div class="row pb-30 pt-15">
                 <div class="col-sm-6">
-                    <script data-cfasync="false" src="../../../cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script>
+                    <script>
                     document.write(new Date().getFullYear())
                     </script> ©, Evara - HTML Ecommerce Template .
                 </div>
@@ -305,98 +256,109 @@
     <script src="/admin/assets/js/vendors/select2.min.js"></script>
     <script src="/admin/assets/js/vendors/perfect-scrollbar.js"></script>
     <script src="/admin/assets/js/vendors/jquery.fullscreen.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
     <!-- Main Script -->
     <script src="/admin/assets/js/main.js" type="text/javascript"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.28/jspdf.plugin.autotable.min.js"></script>
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
-
-
-<script>
-    const filterTypeSelect = document.getElementById('filterType');
-    const customDatesDiv = document.getElementById('customDates');
-    const customDatesEndDiv = document.getElementById('customDatesEnd');
-
-    filterTypeSelect.addEventListener('change', () => {
-        if (filterTypeSelect.value === 'custom') {
-            customDatesDiv.style.display = 'block';
-            customDatesEndDiv.style.display = 'block';
-        } else {
-            customDatesDiv.style.display = 'none';
-            customDatesEndDiv.style.display = 'none';
-        }
-    });
-
-    document.addEventListener('DOMContentLoaded', () => {
-        if (filterTypeSelect.value === 'custom') {
-            customDatesDiv.style.display = 'block';
-            customDatesEndDiv.style.display = 'block';
-        }
-    });
-</script>
-
-<script>
-    const downloadPdf = async () => {
-        try {
-            const response = await fetch('/admin/salesreport?fileType=pdf', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to download PDF');
+  
+    <script>
+        function validateForm() {
+            document.getElementById("couponCodeError").innerHTML = "";
+            document.getElementById("descriptionError").innerHTML = "";
+            document.getElementById("discountError").innerHTML = "";
+            document.getElementById("minPurchaseError").innerHTML = "";
+            document.getElementById("maxDiscountError").innerHTML = "";
+            document.getElementById("dateError").innerHTML = "";
+    
+            const couponCode = document.getElementById("couponCode").value.trim();
+            const description = document.getElementById("description").value.trim();
+            const discount = document.getElementById("percentage").value.trim();
+            const minPurchase = document.getElementById("min_purchase").value.trim();
+            const maxDiscount = document.getElementById("max_discount").value.trim();
+            const expiryDate = document.getElementById("expiry_date").value;
+    
+            let isValid = true;
+    
+            if (couponCode === "") {
+                document.getElementById("couponCodeError").innerText = "Coupon code is required.";
+                isValid = false;
             }
-
-            const blob = await response.blob();
-
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'sales-report.pdf';
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
-        } catch (error) {
-            console.error('Error downloading PDF:', error);
-        }
-    };
-
-    const downloadExcel = async () => {
-        try {
-            const response = await fetch('/admin/salesreport?fileType=excel', {
-                method: 'GET',
-                headers: {
-                    'Content-Type': 'application/json',
-                },
-            });
-
-            if (!response.ok) {
-                throw new Error('Failed to download Excel');
+    
+            if (description === "") {
+                document.getElementById("descriptionError").innerText = "Description is required.";
+                isValid = false;
             }
-
-            const blob = await response.blob();
-
-            const url = window.URL.createObjectURL(blob);
-            const a = document.createElement('a');
-            a.href = url;
-            a.download = 'sales-report.xlsx';
-            document.body.appendChild(a);
-            a.click();
-            a.remove();
-            window.URL.revokeObjectURL(url);
-        } catch (error) {
-            console.error('Error downloading Excel:', error);
+    
+            if (discount === "" || isNaN(discount) || discount < 0 || discount > 100) {
+                document.getElementById("discountError").innerText = "Enter a valid discount percentage (0-100).";
+                isValid = false;
+            }
+    
+            if (minPurchase === "" || isNaN(minPurchase) || minPurchase <= 0) {
+                document.getElementById("minPurchaseError").innerText = "Enter a valid minimum purchase amount (positive number).";
+                isValid = false;
+            }
+    
+            if (maxDiscount === "" || isNaN(maxDiscount) || maxDiscount <= 0 || parseFloat(maxDiscount) < parseFloat(discount)) {
+                document.getElementById("maxDiscountError").innerText = "Enter a valid maximum discount (greater than or equal to the discount percentage).";
+                isValid = false;
+            }
+    
+            const currentDate = new Date().toISOString().split("T")[0];
+            if (expiryDate === "" || expiryDate <= currentDate) {
+                document.getElementById("dateError").innerText = "Enter a valid future expiry date.";
+                isValid = false;
+            }
+    
+            return isValid;
         }
-    };
-</script>
-
+    
+        $(document).ready(function () {
+            $('form').on('submit', function (e) {
+                e.preventDefault();
+    
+                if (!validateForm()) {
+                    return;
+                }
+    
+                const couponId = "<%= coupon._id %>"; 
+                var formData = $(this).serialize();
+    
+                $.ajax({
+                    type: 'PUT',
+                    url: `/admin/editcoupon/${couponId}`, 
+                    data: formData,
+                    success: function (response) {
+                        if (response.success) {
+                            Swal.fire({
+                                icon: 'success',
+                                title: 'Success!',
+                                text: response.message,
+                                confirmButtonText: 'OK'
+                            }).then((result) => {
+                                if (result.isConfirmed) {
+                                    window.location.href = '/admin/coupons'; 
+                                }
+                            });
+                        }
+                    },
+                    error: function (xhr) {
+                        const message = xhr.responseJSON?.message || "An unexpected error occurred.";
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Oops...',
+                            text: message,
+                            confirmButtonText: 'OK'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+    
+    
 </body>
 
 
-<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-orders-1.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:22 GMT -->
+<!-- Mirrored from wp.alithemes.com/html/evara/evara-backend/page-form-product-2.html by HTTrack Website Copier/3.x [XR&CO'2014], Sun, 01 Aug 2021 15:33:32 GMT -->
 </html>

@@ -278,27 +278,27 @@
                                         <div class="col-sm-6 mb-3">
                                             <label class="form-label">Category</label>
                                             <select name="category" class="form-select">
-                                                <% category.forEach(element=> { %>
-                                                    <option value="<%= element._id %>" <%=element._id==product.category
-                                                        ? 'selected' : '' %>>
+                                                <% category.forEach(element => { %>
+                                                    <option value="<%= element._id %>" <%= String(element._id) === String(product.category._id) ? 'selected' : '' %>>
                                                         <%= element.title %>
                                                     </option>
-                                                    <% }); %>
+                                                <% }); %>
                                             </select>
                                         </div>
                                         <div class="col-sm-6 mb-3">
                                             <label class="form-label">Brand</label>
                                             <select name="brandName" class="form-select">
-                                                <% brand.forEach(element=> { %>
-                                                    <option value="<%= element._id %>" <%=element._id==product.brandName
-                                                        ? 'selected' : '' %>>
+                                                <% brand.forEach(element => { %>
+                                                    <option value="<%= element._id %>" <%= element._id.toString() ===   product.brandName._id.toString() ? 'selected' : '' %>>
                                                         <%= element.brandName %>
                                                     </option>
-                                                    <% }); %>
+                                                <% }); %>
                                             </select>
                                         </div>
                                     </div>
                                 </div>
+                                
+                                
 
                                 <button type="submit" class="btn btn-md rounded font-sm hover-up">Edit</button>
                             </form>

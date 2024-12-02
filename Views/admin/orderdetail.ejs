@@ -193,7 +193,7 @@
                         <div class="col-lg-6 col-md-6 ms-auto text-md-end">
                             <label for="Status">Status:</label>
                             <select id="statusSelect" class="form-select d-inline-block mb-lg-0 mb-15 mw-200"<%= (order.status === 'Delivered' || order.status === 'Cancelled') ? 'disabled' : '' %>>
-                                <option value="Awaiting payment" <%= order.status === 'Awaiting payment' ? 'selected' : '' %>>Pending</option>
+                                <option value="Pending" <%= order.status === 'Pending' ? 'selected' : '' %>>Pending</option>
                                 <option value="Shipped" <%= order.status === 'Shipped' ? 'selected' : '' %>>Shipped</option>
                                 <option value="Delivered" <%= order.status === 'Delivered' ? 'selected' : '' %>>Delivered</option>
                                 <option value="Cancelled" <%= order.status === 'Cancelled' ? 'selected' : '' %>>Cancelled</option>
@@ -279,12 +279,14 @@
                                                 <td> ₹<%= item.product.price %> </td>
                                                 <td> <%= item.quantity %> </td>
                                                 <td class="text-end"> ₹<%= item.product.price * item.quantity %> </td>
-                                                <% if(item.productStatus !== "Cancelled") { %>
+                                                <% if(item.productStatus === "Pending" || item.productStatus === "Shipped") { %>
                                                     <td class="product-cancel">
                                                         <button type="button" class="btn btn-danger btn-sm cancel-btn" data-order-id="<%= order._id %>" data-item-id="<%= item._id %>">
                                                             Cancel
                                                         </button>
                                                     </td>
+                                                    <% } else if(item.productStatus =='Delivered') { %>
+                                                        <td style="color: green;" >Delivered</td>
                                                 <% } else { %>
                                                     <td style="color: red;" class="cancel-status">Cancelled</td>
                                                 <% } %>
@@ -300,12 +302,16 @@
                                                         <dd>₹<%=order.totalPrice%></dd>
                                                     </dl>
                                                     <dl class="dlist">
+                                                        <dt>Discount :</dt>
+                                                        <dd> ₹<%= order.discount %> </dd>
+                                                    </dl>
+                                                    <dl class="dlist">
                                                         <dt>Shipping cost:</dt>
                                                         <dd>₹0.00</dd>
                                                     </dl>
                                                     <dl class="dlist">
                                                         <dt>Grand total:</dt>
-                                                        <dd> <b class="h5">₹<%= order.totalPrice %></b> </dd>
+                                                        <dd> <b class="h5">₹<%= order.totalPrice - order.discount %></b> </dd>
                                                     </dl>
                                                     <dl class="dlist">
                                                         <dt class="text-muted">Status:</dt>

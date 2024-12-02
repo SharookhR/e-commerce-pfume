@@ -14,10 +14,16 @@ router.route('/myaccount').get(userController.renderMyAccount)
 router.route('/updatedetails').post(userController.updateUserDetails)
 router.route('/updatepassword').post(userController.updateUserPassword)
 router.route('/orderdetail/:id').get(userController.renderOrderDetail)
+router.route('/orderdetail/:id/invoice').get(userController.generateOrderInvoice)
 router.route('/cancelorder/:id').delete(userController.cancelOrder)
-router.route('/cancelproduct/:orderId/:itemId').post(userController.cancelProduct);
+router.route('/cancelproduct/:orderId/:itemId').patch(userController.cancelProduct);
 router.route('/returnorder/:id').post(userController.returnOrder)
 router.route('/returnorderitem/:orderId/:itemId').patch(userController.returnOrderItem);
+
+
+router.route('/orderdetail/:id/retrypayment').post(userController.retryPayment)
+router.route('/orderdetail/:id/verifyretrypayment').post(userController.verifyRetryPayment)
+
 
 
 //Address
@@ -31,6 +37,7 @@ router.route('/cart').get(userController.renderCart)
 router.route('/addtocart/:id').post(userController.addToCart)
 router.route('/cart/updatequantity/:productId/:action').post(userController.updateQuantity)
 router.route('/cart/removefromcart/:id').delete(userController.removeFromCart)
+router.route('/checkstock').get(userController.checkStock)
 
 //Wish list
 router.route('/wishlist').get(userController.renderWishlist)

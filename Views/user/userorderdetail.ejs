@@ -33,24 +33,64 @@
     <link rel="stylesheet" href="/user/assets/css/plugins/select2.min.css">
     <link rel="stylesheet" href="/user/assets/css/style.css">
     <style>
+        .button-container {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            margin: 20px 0;
+        }
+    
+        .button-container .btn {
+            margin: 0 10px; /* Add spacing between buttons */
+        }
+    
         .thumbnail-img {
-    width: 50px;
-    height: 50px;
-    object-fit: cover;
-    border-radius: 4px;
-    margin-right: 15px; 
-}
-
-.spaced-product-name {
-    padding-left: 10px; 
-}
-.canceled {
-    background-color: #f8d7da; /* Light red background */
-    text-decoration: line-through; /* Strike-through the text */
-}
-
-
-
+            width: 50px;
+            height: 50px;
+            object-fit: cover;
+            border-radius: 4px;
+            margin-right: 15px;
+        }
+    
+        .spaced-product-name {
+            padding-left: 10px;
+        }
+    
+        .canceled {
+            background-color: #f8d7da; /* Light red background */
+            text-decoration: line-through; /* Strike-through the text */
+        }
+    
+        .download-invoice-btn {
+            padding: 10px 20px;
+            font-size: 16px;
+            font-weight: bold;
+            background-color: black;
+            color: white;
+            border: none;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+    
+        .download-invoice-btn:hover {
+            background-color: grey;
+        }
+    
+        @media screen and (max-width: 768px) {
+            .download-invoice-btn {
+                font-size: 14px; /* Slightly smaller text on smaller screens */
+                padding: 8px 16px;
+            }
+    
+            .button-container {
+                flex-direction: column; /* Stack buttons on smaller screens */
+            }
+    
+            .button-container .btn {
+                margin: 10px 0; /* Add spacing between stacked buttons */
+            }
+        }
     </style>
 
 </head>
@@ -142,10 +182,13 @@
                     <div class="col-6">
                         <div class="mobile-header-right-wrap">
                             <div class="header-right-wrap header-right-flex">
+                                <div class="same-style header-wishlist">
+                                    <a href="/user/wishlist"><i class="fa fa-heart-o"></i></a>
+                                </div>
                                 <div class="same-style cart-wrap">
-                                    <a href="#" class="cart-active">
+                                    <a href="/user/cart">
                                         <i class="dlicon shopping_bag-20"></i>
-                                        <span class="count-style">02</span>
+                                        <span class="count-style"><%= cartItemNo%></span>
                                     </a>
                                 </div>
                                 <div class="same-style header-off-canvas">
@@ -230,74 +273,12 @@
                                 <!-- mobile menu navigation start -->
                                 <nav>
                                     <ul class="mobile-menu">
-                                        <li class="menu-item-has-children"><a href="index.html">Home</a>
+                                        <li class="menu-item-has-children"><a href="/user/home">Home</a>
+
                                         </li>
-                                        <li class="menu-item-has-children"><a href="#">Pages</a>
-                                            <ul class="dropdown">
-                                                <li><a href="about-us.html">About Us</a></li>
-                                                <li><a href="contact-us.html">Contact Page</a></li>
-                                                <li><a href="404.html">404 Page</a></li>
-                                                <li><a href="comming-soon.html">Comming Soon 01</a></li>
-                                                <li><a href="comming-soon-2.html">Comming Soon 02</a></li>
-                                                <li><a href="faq.html">FAQ</a></li>
-                                            </ul>
+                                        <li class="menu-item-has-children "><a href="/user/shop">Shop</a>
                                         </li>
-                                        <li class="menu-item-has-children "><a href="shop-fullwide.html">shop</a>
-                                            <ul class="dropdown">
-                                                <li class="menu-item-has-children"><a href="#">Shop Layout</a>
-                                                    <ul class="dropdown">
-                                                        <li><a href="shop-fullwide.html">Shop Fullwidth</a></li>
-                                                        <li><a href="shop-sidebar.html">Shop Sidebar</a></li>
-                                                        <li><a href="shop-metro.html">Shop Metro Layout</a></li>
-                                                        <li><a href="shop-3-col.html">Shop 03 Columns</a></li>
-                                                        <li><a href="shop-2-col.html">Shop 02 Columns</a></li>
-                                                        <li><a href="shop-collection-1.html">Shop Collection 01</a></li>
-                                                        <li><a href="shop-collection-2.html">Shop Collection 02</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="menu-item-has-children"><a href="#">Product Layout</a>
-                                                    <ul class="dropdown">
-                                                        <li><a href="product-details.html">Single 01</a></li>
-                                                        <li><a href="product-details-2.html">Single 02</a></li>
-                                                        <li><a href="product-details-group.html">Grouped</a></li>
-                                                        <li><a href="product-details-sticky.html">Sticky Info</a></li>
-                                                        <li><a href="product-details-configurable.html">Configurable</a></li>
-                                                        <li><a href="product-details-thumbnail.html">Thumbnail</a></li>
-                                                        <li><a href="product-details-video.html">Video</a></li>
-                                                        <li><a href="product-details-affiliate.html">Affiliate</a></li>
-                                                        <li><a href="product-details-sidebar.html">Sidebar</a></li>
-                                                    </ul>
-                                                </li>
-                                                <li class="menu-item-has-children"><a href="#">Shop Pages </a>
-                                                    <ul class="dropdown">
-                                                        <li><a href="my-account.html">My Account</a></li>
-                                                        <li><a href="checkout.html">Check Out</a></li>
-                                                        <li><a href="cart.html">Shopping Cart</a></li>
-                                                        <li><a href="wishlist.html">Wishlist</a></li>
-                                                        <li><a href="order-tracking.html">Order Tracking</a></li>
-                                                        <li><a href="compare.html">Compare</a></li>
-                                                        <li><a href="login-register.html">login / register</a></li>
-                                                    </ul>
-                                                </li>
-                                            </ul>
-                                        </li>
-                                        <li class="menu-item-has-children "><a href="shop-collection-1.html">Collection</a>
-                                            <ul class="dropdown">
-                                                <li><a href="shop-collection-1.html">Shop Collection 01</a></li>
-                                                <li><a href="shop-collection-2.html">Shop Collection 02</a></li>
-                                                <li><a href="shop-metro.html">Shop Metro Layout</a></li>
-                                            </ul>
-                                        </li>
-                                        <li class="menu-item-has-children "><a href="blog.html">Blog</a>
-                                            <ul class="dropdown">
-                                                <li><a href="blog.html">Blog Style 01</a></li>
-                                                <li><a href="blog-2.html">Blog Style 02</a></li>
-                                                <li><a href="blog-3.html">Blog Style 03</a></li>
-                                                <li><a href="blog-details.html">Single Post Style 01</a></li>
-                                                <li><a href="blog-details-2.html">Single Post Style 02</a></li>
-                                            </ul>
-                                        </li>
-                                        <li><a href="shop-instagram.html">Instagram Shop </a></li>
+                                        <li><a href="/user/logout">Log Out </a></li>
                                     </ul>
                                 </nav>
                                 <!-- mobile menu navigation end -->
@@ -393,7 +374,29 @@
             </div>
         </div>
         <!-- cart start -->
-         
+        <div class="button-container">
+            <% if (order.paymentStatus === "Failed") { %>
+                <button
+                    style="background-color: black;
+                    border-color: black;"
+                    id="retry-payment-btn"
+                    class="btn btn-primary"
+                    onclick="retryPayment('<%= order._id %>')"
+                >
+                    Retry Payment
+                </button>
+            <% } %>
+        
+            <% if (order.status === "Delivered") { %>
+                <button
+                    onclick="downloadInvoice('<%= order._id %>')"
+                    class="btn btn-primary download-invoice-btn"
+                >
+                    Download Invoice
+                </button>
+            <% } %>
+        </div>
+          
         <div class="cart-main-area pt-90 pb-100">
             <div class="container">
                 <p>Details of Order ID : #<%= order._id%></p>
@@ -479,7 +482,7 @@
                                                                     Cancel
                                                                 </button>
                                                             </td>
-                                                        <% } else if (item.productStatus === 'Delivered') { %>
+                                                        <% } else if (item.productStatus === 'Delivered' && new Date()< order.returnDate ) { %>
                                                             <td class="return-action">
                                                                 <button class="btn btn-success btn-sm return-btn" 
                                                                         data-order-id="<%= order._id %>" 
@@ -497,7 +500,7 @@
                                                             </td>
                                                         <% } else { %>
                                                             <td class="unknown-status">
-                                                                <span class="text-muted">Unknown Status</span>
+                                                                <span class="text-success">Delivered</span>
                                                             </td>
                                                         <% } %>
                                                         
@@ -649,10 +652,112 @@
     <script src="/user/assets/js/plugins/wow.js"></script>
     <script src="/user/assets/js/plugins/ajax-mail.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.all.min.js"></script>
+    <script src="https://checkout.razorpay.com/v1/checkout.js"></script>
+
     <!-- Main JS -->
     <script src="/user/assets/js/main.js"></script>
 
     <script>
+
+async function retryPayment(orderId) {
+    try {
+        const response = await fetch(`/user/orderdetail/${orderId}/retrypayment`, {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+        });
+
+        const data = await response.json();
+
+        if (!data.success) {
+            Swal.fire({
+                icon: "error",
+                title: "Retry Payment Failed",
+                text: "Unable to retry payment. Please try again later.",
+            });
+            return;
+        }
+
+        const options = {
+            key: data.key, 
+            amount: data.amount, 
+            currency: data.currency, 
+            name: "PFume", 
+            description: "Retry Payment for Order",
+            order_id: data.razorpayOrderId, 
+            handler: async function (response) {
+                try {
+                    const verifyResponse = await fetch(`/user/orderdetail/${orderId}/verifyretrypayment`, {
+                        method: "POST",
+                        headers: { "Content-Type": "application/json" },
+                        body: JSON.stringify({
+                            razorpayPaymentId: response.razorpay_payment_id,
+                            razorpayOrderId: response.razorpay_order_id,
+                            razorpaySignature: response.razorpay_signature,
+                        }),
+                    });
+
+                    const verifyData = await verifyResponse.json();
+
+                    if (verifyData.success) {
+                        Swal.fire({
+                            icon: "success",
+                            title: "Payment Verified",
+                            text: "Your payment has been successfully verified!",
+                        }).then(() => {
+                            window.location.reload(); 
+                        });
+                    } else {
+                        Swal.fire({
+                            icon: "error",
+                            title: "Payment Verification Failed",
+                            text: "We could not verify your payment. Please contact support.",
+                        });
+                    }
+                } catch (error) {
+                    console.error("Payment Verification Error:", error);
+                    Swal.fire({
+                        icon: "error",
+                        title: "Verification Error",
+                        text: "Something went wrong while verifying payment. Please try again.",
+                    });
+                }
+            },
+            prefill: {
+                name: data.prefill.name, 
+                email: data.prefill.email,
+                contact: data.prefill.contact,
+            },
+            theme: {
+                color: "#3399cc", 
+            },
+        };
+
+        const rzp = new Razorpay(options);
+
+        rzp.open();
+
+        rzp.on("payment.failed", function (response) {
+            Swal.fire({
+                icon: "error",
+                title: "Payment Failed",
+                text: "Payment was not successful. Please try again.",
+            });
+        });
+    } catch (error) {
+        console.error("Retry Payment Error:", error);
+        Swal.fire({
+            icon: "error",
+            title: "Something went wrong",
+            text: "Unable to initiate Razorpay. Please try again.",
+        });
+    }
+}
+
+
+const downloadInvoice = (orderId) => {
+        window.location.href = `/user/orderdetail/${orderId}/invoice`;
+    };
+
         document.addEventListener('DOMContentLoaded', function () {
     document.querySelectorAll('.cancel-btn').forEach(button => {
         button.addEventListener('click', function (event) {
@@ -670,7 +775,7 @@
                 confirmButtonText: 'Yes, cancel it!'
             }).then((result) => {
                 if (result.isConfirmed) {
-                    fetch(`/user/cancelitem/${orderId}/${itemId}`, {
+                    fetch(`/user/cancelproduct/${orderId}/${itemId}`, {
                         method: 'PATCH',
                         headers: {
                             'Content-Type': 'application/json'

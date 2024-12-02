@@ -26,6 +26,10 @@ const orderSchema = new mongoose.Schema({
                 type:String,
                 enum:["Pending", "Shipped", "Delivered", "Cancelled", "Returned"],
                 default:'Pending'
+            },
+            deliveryDate:{
+                type:Date,
+                default:null
             }
         }
     ],
@@ -59,6 +63,9 @@ const orderSchema = new mongoose.Schema({
         type:Date,
         default:Date.now()
     },
+    returnDate:{
+        type:Date
+    },
     returnReason: {
         type:String
     },
@@ -69,7 +76,7 @@ const orderSchema = new mongoose.Schema({
         type:Number,
         default:0
     }
-})
+},{timestamps:true})
 
 orderSchema.statics.getNextOrderNumber = async function() {
     const lastOrder = await this.findOne().sort({ orderno: -1 }); 

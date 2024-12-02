@@ -12,6 +12,6 @@ const walletSchema = new mongoose.Schema({
       orderId: { type: String }
     }
   ]
-});
+},{timestamps:true});
 
 module.exports = mongoose.model('Wallet', walletSchema);

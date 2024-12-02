@@ -5,6 +5,7 @@ const bcrypt = require('bcrypt')
 const { generateAccessToken, generateRefreshToken } = require('../utility/token')
 const { generateOtp, sendOtpEmail } = require('../utility/otputility')
 const resetUser = require("../Model/otpModel")
+const Wallet = require('../Model/walletModel')
 
 const renderLogin = async (req, res) => {
     try {
@@ -171,7 +172,7 @@ const verifyOtp = async (req, res) => {
                 return res.redirect('/auth/signup/otp')
 
             }
-            const user = new User({
+            const user = await User.create({
                 name: tempUserData.name,
                 email: tempUserData.email,
                 password: tempUserData.password,
@@ -179,7 +180,11 @@ const verifyOtp = async (req, res) => {
 
             })
 
-            await user.save()
+            await Wallet.create({
+                userId: user._id,
+                balance: 0, 
+                transactions: [], 
+              });
             req.flash('error-message', "Registered successfully")
             return res.redirect('/auth/login')
 

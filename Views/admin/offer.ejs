@@ -185,7 +185,7 @@
                 </div>
             </div>
             <div class="card mb-4">
-                <header class="card-header">
+                <!-- <header class="card-header">
                     <div class="row gx-3">
                         <div class="col-lg-4 col-md-6 me-auto">
                             <input type="text" placeholder="Search..." class="form-control">
@@ -206,7 +206,7 @@
                             </select>
                         </div>
                     </div>
-                </header> <!-- card-header end// -->
+                </header>  -->
                 <div class="card-body">
                     <div class="table-responsive">
                         <table class="table table-hover">
@@ -259,12 +259,26 @@
                                             </td>
                                             
                                             <td>
-                                                <% if(offer.isListed){ %>
-                                                    <button class="rounded-pill btn btn-danger btn-sm " offer-id="<%=offer._id %>" onclick="confirmUnlist('<%= offer._id %>')">Unlist</button>
+                                                <% if (offer.isListed) { %>
+                                                    <button class="rounded-pill btn btn-danger btn-sm" 
+                                                            offer-id="<%= offer._id %>" 
+                                                            onclick="confirmUnlist('<%= offer._id %>')">
+                                                        Unlist
+                                                    </button>
                                                 <% } else { %>
-                                                    <button class="rounded-pill btn btn-success btn-sm text-light" offer-id="<%=offer._id %>" onclick="confirmList('<%= offer._id %>')">List</button>
+                                                    <button class="rounded-pill btn btn-success btn-sm text-light" 
+                                                            offer-id="<%= offer._id %>" 
+                                                            onclick="confirmList('<%= offer._id %>')">
+                                                        List
+                                                    </button>
                                                 <% } %>
+                                            
+                                                <!-- Edit Button -->
+                                                
+                                                    <a href="/admin/editoffer/<%=offer._id%>" class="rounded-pill btn-primary text-light btn-sm" >Edit</a>
+                                                
                                             </td>
+                                            
                                             
                                         </tr>
                                 <% }) ;%>

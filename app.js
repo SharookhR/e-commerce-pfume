@@ -17,7 +17,7 @@ app.set("views", ["./Views/user", "./Views/admin"])
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use(session({
-    secret:"msn",
+    secret:process.env.SESSION_SECRET,
     resave:false,
     saveUninitialized:true
 }))

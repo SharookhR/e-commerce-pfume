@@ -20,9 +20,7 @@ const verifyRefreshToken = async (req, res, next)=>{
                 const user = await User.findById(userId)
                 if(!user){
                     res.clearCookie("accessToken");
-                    res.clearCookie('refreshToken')
-                    console.log("cookie cleared");
-                    
+                    res.clearCookie('refreshToken')                    
                     return res.redirect("/auth/login")
                 }
 

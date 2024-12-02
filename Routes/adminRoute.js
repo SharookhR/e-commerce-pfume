@@ -45,11 +45,14 @@ router.route('/offers').get(adminController.renderOffer)
 router.route('/addoffer').get(adminController.renderAddOffer).post(adminController.addOffer)
 router.route('/listoffer/:id').patch(adminController.listOffer)
 router.route('/unlistoffer/:id').patch(adminController.unlistOffer)
+router.route('/editoffer/:id').get(adminController.renderEditOffer).post(adminController.editOffer)
 
 //Coupon
 router.route('/coupons').get(adminController.renderCoupon)
 router.route('/addcoupon').get(adminController.renderAddCoupon).post(adminController.addCoupon)
 router.route('/coupons/deletecoupon/:id').delete(adminController.deleteCoupon)
+router.route('/editcoupon/:id').get(adminController.renderEditCoupon).put(adminController.editCoupon)
+
 
 
 //Sales Report
