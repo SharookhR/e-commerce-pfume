@@ -1,3 +1,4 @@
+require('dotenv').config()
 const jwt = require('jsonwebtoken')
 const User = require("../Model/UserModel");
 const bcrypt = require('bcrypt')
@@ -16,7 +17,6 @@ const Wallet = require('../Model/walletModel')
 const {jsPDF} = require('jspdf')
 require('jspdf-autotable')
 const { handleRefund } = require('../utility/handlerefund')
-require('dotenv').config()
 const fs =  require('fs')
 
 const instance = new Razorpay({
