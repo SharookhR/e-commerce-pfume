@@ -141,6 +141,8 @@
                     errorMessage.classList.remove('d-none');
                 }
             } catch (error) {
+                console.log(error);
+                
                 errorMessage.textContent = 'An unexpected error occurred. Please try again.';
                 errorMessage.classList.remove('d-none');
             }
