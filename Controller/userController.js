@@ -1450,7 +1450,14 @@ const returnOrderItem = async(req, res)=>{
 }
 
 
-
+const renderSampleLogin = async (req, res)=>{
+  try {
+    res.render('samplelogin')
+  } catch (error) {
+    console.log(error);
+    
+  }
+}
 
 
 
@@ -1499,5 +1506,6 @@ module.exports = {
   createOrder,
   returnOrder,
   returnOrderItem,
+  renderSampleLogin,
   logout
 };

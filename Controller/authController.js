@@ -85,39 +85,47 @@ const adminlogin = async (req, res) => {
 
 
 const renderOtpPage = async (req, res) => {
-
-
     try {
         const token = req.cookies.token;
-        
 
         if (!token) {
-            return res.redirect('/auth/signup')
+            return res.redirect('/auth/signup');
         }
-        const decode = jwt.verify(token, process.env.JWT_OTP_TOKEN)
-        const checkingUser = decode.userId
-        const user = await tempUser.findById(checkingUser)
+
+        const userId = req.userId;
+        const user = await tempUser.findById(userId);
+
+        if (!user || !user.lastOtp) {
+            return res.redirect('/auth/signup');
+        }
+
+        const currentTime = Date.now();
+        const lastOtpTime = user.lastOtp.getTime(); 
+        const resendTimeout = Math.max(0, (lastOtpTime + 60000) - currentTime);
+
+        return res.render('otp', { 
+            errorMessage: req.flash('error-message'), 
+            user, 
+            expiresAt: resendTimeout / 1000
+        });
         
-
-
-
-        return res.render('otp', { errorMessage: req.flash('error-message'), expiresAt:user.lastOtp.getTime()})
     } catch (error) {
         console.error('Token verification failed:', error);
         return res.redirect('/auth/signup');
     }
+};
 
-}
+
 
 const signup = async (req, res) => {
 
 
     try {
         const { name, password, email, mno } = req.body
+        const tempExist = await tempUser.findOne({email})
         const existence = await User.findOne({ email })
-        if (existence) {
-            req.flash('error-message', 'User already exist')
-            return res.redirect('/auth/signup')
+        if (existence || tempExist) {
+            return res.status(400).json({success:false, message:"User Already exist"})
 
         }
 
@@ -147,7 +155,7 @@ const signup = async (req, res) => {
             httpOnly: false,
             maxAge: 10 * 60 * 1000
         })
-        return res.redirect('/auth/signup/otp');
+        return res.status(200).json({success: true})
     } catch (error) {
         console.log(error);
     }
@@ -157,58 +165,55 @@ const signup = async (req, res) => {
 
 const verifyOtp = async (req, res) => {
     try {
-        const userId = req.userId
-        const { otp } = req.body
+        const userId = req.userId;
+        const { otp } = req.body;
 
-        const tempUserData = await tempUser.findById(userId)
+        const tempUserData = await tempUser.findById(userId);
 
-        if (!tempUserData.otp) {
-            return res.render('otp', { errorMessage: "No OTP found" })
+        if (!tempUserData || !tempUserData.otp) {
+            return res.status(400).json({ success: false, message: "No OTP found." });
         }
 
-        if (otp === tempUserData.otp) {
-            if (Date.now() > tempUserData.otpExpiresAt) {
-                req.flash("error-message", 'OTP expired')
-                return res.redirect('/auth/signup/otp')
-
-            }
-            const user = await User.create({
-                name: tempUserData.name,
-                email: tempUserData.email,
-                password: tempUserData.password,
-                phone: tempUserData.phone,
-
-            })
-
-            await Wallet.create({
-                userId: user._id,
-                balance: 0, 
-                transactions: [], 
-              });
-            req.flash('error-message', "Registered successfully")
-            return res.redirect('/auth/login')
-
+        if (otp !== tempUserData.otp) {
+            return res.status(400).json({ success: false, message: "Invalid OTP." });
         }
-        else {
-            req.flash('error-message', 'Invalid OTP')
-            return res.redirect('/auth/signup/otp')
 
+        if (Date.now() > tempUserData.otpExpiresAt) {
+            return res.status(400).json({ success: false, message: "OTP expired." });
         }
+
+        const user = await User.create({
+            name: tempUserData.name,
+            email: tempUserData.email,
+            password: tempUserData.password,
+            phone: tempUserData.phone,
+        });
+
+        await Wallet.create({
+            userId: user._id,
+            balance: 0,
+            transactions: [],
+        });
+
+        return res.status(200).json({ success: true, message: "Registered successfully. Redirecting to login..." });
     } catch (error) {
-        console.log(error);
+        console.error("Error verifying OTP:", error);
+        return res.status(500).json({ success: false, message: "An error occurred. Please try again later." });
     }
-}
+};
+
 
 const userLogin = async (req, res) => {
     try {
         const { email, password } = req.body
 
-        const user = await User.findOne({ email })
+        const user = await User.findOne({ email });
+        console.log(user);
+        
         if (!user || !(await user.comparePassword(password))) {
-            req.flash('error-message', "Invalid Email or password")
-            return res.redirect('/auth/login')
+            return res.status(400).json({ success: false, message: 'Invalid Email or Password' });
         }
-
+        
 
         const accessToken = generateAccessToken(user._id)
         const refreshToken = generateRefreshToken(user._id)
@@ -225,7 +230,7 @@ const userLogin = async (req, res) => {
             maxAge: 30 * 24 * 60 * 60 * 1000
         })
 
-        return res.redirect('/user/home')
+        return res.status(200).json({ success: true, redirectUrl: '/user/home' });
 
     } catch (error) {
         console.log(error);
@@ -236,32 +241,32 @@ const userLogin = async (req, res) => {
 
 const resendOtp = async (req, res) => {
     try {
-        const userId = req.userId
-        const user = await tempUser.findById(userId)
-        const currentTime = Date.now()
-        const lastOtpTime =  currentTime - user.lastOtp
-        if(lastOtpTime<60*1000){
-            req.flash("error-message", "Please wait ")
-            return res.redirect('/auth/signup/otp')
+        const userId = req.userId;
+        const user = await tempUser.findById(userId);
+
+        const currentTime = Date.now();
+        const lastOtpTime = currentTime - user.lastOtp;
+
+        if (lastOtpTime < 60 * 1000) {
+            return res.status(400).json({ success: false, message: "Please wait before requesting another OTP." });
         }
-        const { otp, otpExpiresAt, lastOtp} = generateOtp();
+
+        const { otp, otpExpiresAt, lastOtp } = generateOtp();
         user.otp = otp;
-        user.otpExpiresAt = otpExpiresAt
-        user.lastOtp = lastOtp
-        
+        user.otpExpiresAt = otpExpiresAt;
+        user.lastOtp = lastOtp;
 
         await user.save();
 
+        await sendOtpEmail(user.email, otp);
 
-        await sendOtpEmail(user.email, otp)
-        req.flash('error-message', 'OTP has been resent')
-        return res.redirect("/auth/signup/otp");
-
+        return res.status(200).json({ success: true, message: "OTP has been resent." });
     } catch (error) {
-        console.log(error);
-
+        console.log("Error during OTP resend:", error);
+        return res.status(500).json({ success: false, message: "An error occurred. Please try again later." });
     }
-}
+};
+
 
 const renderForgotPasssword = async (req, res) => {
     try {
