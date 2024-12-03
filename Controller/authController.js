@@ -52,13 +52,13 @@ const adminlogin = async (req, res) => {
 
         const user = await User.findOne({ email });
         if (!user || !(await user.comparePassword(password))) {
-            req.flash('error-message', "Invalid email or password")
-            return res.redirect('/auth/adminlogin');
+            return res.status(400).json({ success: false, message: 'Invalid Email or Password' });
+
         }
 
         if (!user.isAdmin) {
-            req.flash('error-message', "You are not an admin")
-            return res.redirect('/auth/adminlogin')
+            return res.status(400).json({ success: false, message: 'You are not an Admin' });
+
         }
 
         const accessToken = generateAccessToken(user._id);
@@ -76,7 +76,7 @@ const adminlogin = async (req, res) => {
             maxAge: 30 * 24 * 60 * 60 * 1000
         });
 
-        return res.redirect('/admin/dashboard');
+        return res.status(200).json({ success: true, redirectUrl: '/admin/dashboard' });
     } catch (error) {
         console.log(error);
 
@@ -208,7 +208,6 @@ const userLogin = async (req, res) => {
         const { email, password } = req.body
 
         const user = await User.findOne({ email });
-        console.log(user);
         
         if (!user || !(await user.comparePassword(password))) {
             return res.status(400).json({ success: false, message: 'Invalid Email or Password' });
