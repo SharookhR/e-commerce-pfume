@@ -423,12 +423,14 @@
             updateInputWithFiles();
         }
         let removedImages = []; 
-
+        
 function removeExistingImage(imageUrl) {
    
     if (!removedImages.includes(imageUrl)) {
         removedImages.push(imageUrl); 
     }
+    console.log(removedImages);
+    
     existingImagesArray = existingImagesArray.filter(img => `/uploads/${img}` !== imageUrl);
     renderImages(); 
 }
@@ -535,6 +537,7 @@ function removeExistingImage(imageUrl) {
 
     return isValid;
 }
+console.log(filesArray);
 
         $(document).ready(function () {
             $('form').on('submit', function (e) {
@@ -544,16 +547,24 @@ function removeExistingImage(imageUrl) {
                 }
                 const form = $(this)[0];
                 const formData = new FormData(form);
-                filesArray.forEach(file => formData.append('images', file));
+                formData.append('images', JSON.stringify(filesArray));
                 
                 existingImagesArray.forEach(image => {
         if (!removedImages.includes(image)) {
             formData.append('existingImages', image);
         }
+        
     });
-    removedImages.forEach(image => {
-        formData.append('removedImages', image);
-    });
+    
+    // removedImages.forEach(image => {
+    //     formData.append('removedImages', image);
+    //     console.log(image);
+        
+    // });
+    formData.append('removedImages', JSON.stringify(removedImages));
+
+                
+                
                 const productId = $(this).data('id');
                 $.ajax({
                     type: 'POST',

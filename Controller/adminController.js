@@ -1,4 +1,3 @@
-const { status, json } = require("express/lib/response");
 const User = require("../Model/UserModel");
 const Categories = require('../Model/categoryModel');
 const Brand = require("../Model/brandModel");
@@ -376,7 +375,7 @@ const editProduct = async (req, res) => {
     try {
         const { productTitle, productDescription, price, stock, brandName, category } = req.body;
         const productId = req.params.id;
-        const imag = Array.isArray(req.body.removedImages) ? req.body.removedImages : [];
+        const imag = JSON.parse(req.body.removedImages);
 
         if (imag.length > 0) {
             imag.forEach(image => {
@@ -391,15 +390,25 @@ const editProduct = async (req, res) => {
             });
         }
 
-        const media = req.files && req.files.length > 0 ? req.files.map(file => file.filename) : [];
+        const product = await Product.findById(productId);
+
+        if (!product) {
+            return res.status(404).json({ success: false, message: 'Product not found' });
+        }
+
         const existingProduct = await Product.findOne({ title: new RegExp(`^${productTitle}$`, 'i') });
         if (existingProduct && existingProduct._id.toString() !== productId) {
             return res.status(400).json({ success: false, message: 'Product with similar name exists' });
         }
 
-        const product = await Product.findById(productId);
-        const existingImages = product.images.filter(image => !imag.includes(image));
-        const updatedImages = [...existingImages, ...media];
+        const media = req.files && req.files.length > 0 ? req.files.map(file => file.filename) : [];
+        console.log(product.images);
+        console.log(imag);
+        
+        
+        const existingImages = product.images.filter(image => !imag.includes('/uploads/'+image));
+        
+        const updatedImages = [...media, ...existingImages];
 
         const updateData = {
             title: productTitle,
@@ -412,13 +421,14 @@ const editProduct = async (req, res) => {
         };
 
         await Product.findByIdAndUpdate(productId, updateData);
+        
         return res.json({ success: true, message: "Product edited successfully" });
-
     } catch (error) {
-        console.log(error);
+        console.error('Error editing product:', error);
         return res.status(500).json({ success: false, message: 'Server error. Please try again later.' });
     }
 };
+
 
 
 
@@ -637,7 +647,7 @@ const renderOrder = async(req, res)=>{
         const totalOrderCount = await Order.countDocuments();
         const totalPages = Math.ceil(totalOrderCount / limit);
         
-        const orders = await Order.find().skip(skip).limit(limit)
+        const orders = await Order.find().skip(skip).limit(limit).sort({createdAt:-1});
 
         res.render('orders',{orders, totalPages, currentPage: page,})
     } catch (error) {

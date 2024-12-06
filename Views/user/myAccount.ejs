@@ -464,7 +464,7 @@
                                                 <% orders.forEach((order)=>{ %>
                                                 <tr>
                                                     <td>#<%= order._id %></td>
-                                                    <td><%= order.orderDate.toLocaleDateString() %></td>
+                                                    <td><%= order.orderDate.toLocaleDateString('en-IN') %></td>
                                                     <td id="order-status-<%= order._id %>">
                                                         <% if(order.status === 'Pending'){ %>
                                                             <p style="color: lightskyblue;"><%= order.status %></p>

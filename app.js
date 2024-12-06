@@ -10,6 +10,7 @@ const passport = require('passport')
 const session = require('express-session')
 const flash = require('connect-flash')
 require('./config/googleAuth')
+const bodyParser = require('body-parser');
 
 
 app.set("view engine",'ejs')
@@ -29,6 +30,7 @@ app.use(express.json())
 app.use(express.urlencoded({extended: true}))
 app.use(cookieParser())
 app.use(flash())
+app.use(bodyParser.json())
 
 
 
